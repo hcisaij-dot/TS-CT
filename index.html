@@ -98,7 +98,7 @@
         .s-note { font-size: 12px; color: var(--text-muted); margin-top: 5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         /* BOTONES LATERALES TARJETA */
-        .s-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 65px; gap: 5px; }
+        .s-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; min-height: 65px; gap: 5px; }
         .s-hrs { font-size: 14px; font-weight: 800; color: var(--accent); background: rgba(46, 204, 113, 0.1); padding: 4px 8px; border-radius: 8px; }
         .btn-icon-action { background: transparent; border: none; padding: 6px; cursor: pointer; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
         .btn-del { color: var(--text-muted); }
@@ -130,7 +130,7 @@
         .btn-copy { flex:1; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; transition: transform 0.2s; box-shadow: var(--shadow-sm); }
         .btn-copy:active { transform: scale(0.97); background: var(--border); }
 
-        /* MODALES MEJORADOS (Sin Scrollbar visible) */
+        /* MODALES MEJORADOS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-card { background: var(--bg-surface); width: 90%; max-width: 450px; padding: 25px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 90vh; overflow-y: auto; scrollbar-width: none; }
         .modal-card::-webkit-scrollbar { display: none; }
@@ -755,7 +755,7 @@
                     ? `<div class="s-time">${t.start} - ${t.end}</div><div class="s-tags">${b.join('')}</div>${liveBadge}${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`
                     : `<div class="s-time" style="color:var(--text-muted);">Día Libre</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`;
 
-                html += `<div class="shift-card fade-in ${esHoy?'today':''}"><div class="s-date"><div class="s-day">${esHoy?'HOY':DIAS_SHORT[dObj.getDay()]}</div><div class="s-num">${td}</div></div><div class="s-info">${mid}</div><div class="s-right">${btnAccion}<button class="btn-icon-action btn-del" onclick="eliminarTurno(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>${t.trabajado ? `<div class="s-hrs">${t.hrs}h</div>` : ''}</div></div>`;
+                html += `<div class="shift-card fade-in ${esHoy?'today':''}"><div class="s-date"><div class="s-day">${esHoy?'HOY':DIAS_SHORT[dObj.getDay()]}</div><div class="s-num">${td}</div></div><div class="s-info">${mid}</div><div class="s-right"><div style="display:flex; gap:4px;">${btnAccion}<button class="btn-icon-action btn-del" onclick="eliminarTurno(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></div>${t.trabajado ? `<div class="s-hrs">${t.hrs}h</div>` : ''}</div></div>`;
             });
             cont.innerHTML = html;
         }
