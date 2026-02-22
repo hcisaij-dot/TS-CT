@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOHKA Schedule Premium</title>
+    <title>TOHKA SP</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* VARIABLES Y TEMAS */
         :root {
             --bg-body: #f4f5f8; 
             --bg-surface: #ffffff;
@@ -208,7 +207,7 @@
     <div id="pantalla-login">
         <div class="login-box">
             <div class="login-icon">TS</div>
-            <h2 style="margin-bottom: 5px; color: var(--text-main);">Schedule Pro</h2>
+            <h2 style="margin-bottom: 5px; color: var(--text-main);">TOHKA SPo</h2>
             <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Bóveda Privada</p>
             <input type="password" id="login-pin" class="pin-input" placeholder="••••" maxlength="4" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
             <p id="login-err" style="color: var(--danger); font-size: 12px; font-weight: 700; margin-top: -10px; margin-bottom: 15px; display: none;">PIN Incorrecto</p>
@@ -330,7 +329,7 @@
                     </div>
                 </div>
                 <div class="odoo-alert" id="box-odoo" style="margin-bottom: 15px;">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z" /></svg>
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                     <span class="odoo-text" id="txt-odoo">Justificar en Odoo</span>
                 </div>
                 <label class="check-row" id="cr-break" style="margin-bottom: 15px;">
@@ -452,7 +451,7 @@
             const saveProf = localStorage.getItem('tohka_sch_prof');
             if(saveProf) {
                 const parsed = JSON.parse(saveProf);
-                profile = { ...profile, ...parsed }; // Fusiona para no perder la firma si es cuenta vieja
+                profile = { ...profile, ...parsed };
             }
             
             if(localStorage.getItem('tohka_theme') === 'dark') {
@@ -632,7 +631,7 @@
             const buscador = document.getElementById('in-buscar-hist');
             if (buscador && buscador.value !== "") {
                 buscador.value = "";
-                renderHistorial(); // Resetea la lista del historial para que quede limpia
+                renderHistorial(); 
             }
         }
 
@@ -651,7 +650,6 @@
             if(profile.img) prev.innerHTML = `<img src="${profile.img}">`;
             else prev.innerHTML = (profile.nombre || "U").charAt(0).toUpperCase();
             
-            // Cargar preview de firma escaneada
             const prevFirma = document.getElementById('edit-firma-prev');
             if(profile.firma) prevFirma.innerHTML = `<img src="${profile.firma}" style="max-width:100%; max-height:100%; object-fit:contain;">`;
             else prevFirma.innerHTML = `<span style="color: var(--text-muted); font-size: 12px;">Sin firma</span>`;
@@ -691,7 +689,6 @@
                         if (h > MAX_H) { w *= MAX_H / h; h = MAX_H; }
                         const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
                         const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
-                        // Usamos PNG para intentar conservar la transparencia si es que la imagen original la tiene
                         profile.firma = canvas.toDataURL('image/png');
                         document.getElementById('edit-firma-prev').innerHTML = `<img src="${profile.firma}" style="max-width:100%; max-height:100%; object-fit:contain;">`;
                     };
@@ -940,7 +937,7 @@
             navigator.clipboard.writeText(txt).then(() => mostrarAlerta("¡Éxito!", "Copiado al portapapeles."));
         }
 
-        // --- SISTEMA DE PDF CON FIRMA ESCANEADA ---
+        // --- SISTEMA DE PDF CON FIRMA ESCANEADA CORREGIDA ---
         function procesarPDF(key, mes, anio) {
             if(!profile.firma) {
                 mostrarAlerta("Firma Faltante", "Ve a 'Configuración' (tocando tu foto de perfil arriba a la derecha) y sube la imagen de tu firma escaneada primero para poder generar el PDF.");
@@ -958,6 +955,7 @@
                 if(t.notas && !t.notas.includes('Odoo')) trs += `<tr><td colspan="5" style="padding:4px 10px 10px 10px; border-bottom:2px solid #eee; font-size:11px; color:#555; font-style:italic;">Nota: ${t.notas}</td></tr>`;
             });
 
+            // Estructura HTML del PDF asegurando el tamaño exacto de la firma
             const pdfHtml = `
             <div style="padding: 40px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
                 <div style="text-align:center; margin-bottom:30px;">
@@ -980,8 +978,11 @@
                     Total Laborado: <strong>${th} hrs</strong><br>
                     <span style="color:#27ae60;">Horas Adicionales (Gratificación): <strong>+${Math.max(0, th-160)} hrs</strong></span>
                 </div>
+                
                 <div style="text-align:center; margin-top:50px;">
-                    <img src="${profile.firma}" style="height:80px; display:block; margin: 0 auto; border-bottom: 1px solid #333; padding-bottom:5px; object-fit:contain;">
+                    <div style="display:inline-block; width:250px; border-bottom:1px solid #333; padding-bottom:5px; min-height:80px; position:relative;">
+                        <img src="${profile.firma}" style="max-width:100%; max-height:80px; width:auto; height:auto; display:block; margin: 0 auto;">
+                    </div>
                     <p style="margin-top:5px; font-weight:bold;">Firma del Colaborador</p>
                 </div>
             </div>`;
