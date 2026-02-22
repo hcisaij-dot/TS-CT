@@ -201,8 +201,6 @@
         
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .shake { animation: shake 0.3s ease-in-out; }
-
-        #pad-firma { width: 100%; height: 200px; background: #fff; border: 2px dashed var(--border); border-radius: 14px; cursor: crosshair; touch-action: none; margin-bottom: 15px; }
     </style>
 </head>
 <body class="theme-purple">
@@ -245,21 +243,6 @@
                 <button onclick="cerrarModal('sync-modal')" class="b-can">Cancelar</button>
                 <button onclick="ejecutarRestauracion()" class="b-sav">Restaurar</button>
             </div>
-        </div>
-    </div>
-
-    <div id="modal-firma" class="modal-overlay" style="z-index: 2800;" onclick="if(event.target === this) cerrarModal('modal-firma')">
-        <div class="modal-card" style="max-width: 400px; text-align: center;">
-            <h3 style="color: var(--text-main); margin-bottom: 10px;">Firma Digital</h3>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Dibuja tu firma para adjuntarla en el reporte PDF oficial.</p>
-            <canvas id="pad-firma"></canvas>
-            <div class="btn-split" style="margin-top: 0;">
-                <button onclick="limpiarFirma()" class="b-can">Borrar Firma</button>
-                <button onclick="procesarFirmaYPDF()" class="b-sav">Exportar PDF</button>
-            </div>
-            <input type="hidden" id="pdf-key">
-            <input type="hidden" id="pdf-mes">
-            <input type="hidden" id="pdf-y">
         </div>
     </div>
 
@@ -347,7 +330,7 @@
                     </div>
                 </div>
                 <div class="odoo-alert" id="box-odoo" style="margin-bottom: 15px;">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z" /></svg>
                     <span class="odoo-text" id="txt-odoo">Justificar en Odoo</span>
                 </div>
                 <label class="check-row" id="cr-break" style="margin-bottom: 15px;">
@@ -421,11 +404,24 @@
             </label>
 
             <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
-                <span class="tf-label" style="color: var(--primary); margin-bottom: 5px;">🛡️ Gestión de Datos y Restauración</span>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">Tus turnos se guardan automáticamente en Google Drive. Usa estas opciones solo si necesitas mover tus datos de un celular a otro manualmente.</p>
+                <span class="tf-label">Firma Escaneada (Para PDFs)</span>
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <div id="edit-firma-prev" style="width: 100%; height: 80px; background: var(--bg-body); border: 1px dashed var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px;">
+                        <span style="color: var(--text-muted); font-size: 12px;">Sin firma</span>
+                    </div>
+                    <label class="btn-upload-foto">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                        Subir Firma
+                        <input type="file" accept="image/*" style="display:none;" onchange="cargarFirma(event)">
+                    </label>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <span class="tf-label" style="color: var(--primary); margin-bottom: 5px;">🛡️ Gestión de Datos</span>
                 <div class="btn-split" style="margin-top: 10px;">
-                    <button class="b-can" onclick="generarCodigoSync()" style="font-size: 11px; padding: 12px;">Copiar Código de Respaldo</button>
-                    <button class="b-can" onclick="abrirModalSync()" style="font-size: 11px; padding: 12px; color: var(--primary); border-color: var(--primary);">Restaurar con Código</button>
+                    <button class="b-can" onclick="generarCodigoSync()" style="font-size: 11px; padding: 12px;">Copiar Respaldo</button>
+                    <button class="b-can" onclick="abrirModalSync()" style="font-size: 11px; padding: 12px; color: var(--primary); border-color: var(--primary);">Restaurar Info</button>
                 </div>
             </div>
             <div class="btn-split" style="margin-top: 25px;">
@@ -442,7 +438,7 @@
         const PIN_ACCESO = "4425"; 
 
         let db = { turnos: [] };
-        let profile = { nombre: "Joel", img: "", color: "purple", notifications: false }; 
+        let profile = { nombre: "Joel", img: "", color: "purple", notifications: false, firma: "" }; 
         let stateTime = { inH: 8, inM: "00", outH: 14, outM: "00" };
 
         const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -454,7 +450,10 @@
             else if(localStorage.getItem('tohka_sch_v3')) { db = JSON.parse(localStorage.getItem('tohka_sch_v3')); localStorage.setItem('tohka_sch_v4', JSON.stringify(db)); }
             
             const saveProf = localStorage.getItem('tohka_sch_prof');
-            if(saveProf) profile = JSON.parse(saveProf);
+            if(saveProf) {
+                const parsed = JSON.parse(saveProf);
+                profile = { ...profile, ...parsed }; // Fusiona para no perder la firma si es cuenta vieja
+            }
             
             if(localStorage.getItem('tohka_theme') === 'dark') {
                 document.body.classList.add('dark-mode');
@@ -468,7 +467,6 @@
             actualizarHeader();
             renderUI();
             setInterval(loopMinuto, 60000); 
-            inicializarCanvasFirma();
         });
 
         function loopMinuto() {
@@ -629,6 +627,13 @@
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
             document.getElementById('main-fab').style.display = (id === 'tab-turnos') ? 'flex' : 'none';
+            
+            // CORRECCIÓN BUG BUSCADOR: Limpiar buscador al cambiar de pestaña
+            const buscador = document.getElementById('in-buscar-hist');
+            if (buscador && buscador.value !== "") {
+                buscador.value = "";
+                renderHistorial(); // Resetea la lista del historial para que quede limpia
+            }
         }
 
         function cerrarModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -645,6 +650,12 @@
             const prev = document.getElementById('edit-avatar-prev');
             if(profile.img) prev.innerHTML = `<img src="${profile.img}">`;
             else prev.innerHTML = (profile.nombre || "U").charAt(0).toUpperCase();
+            
+            // Cargar preview de firma escaneada
+            const prevFirma = document.getElementById('edit-firma-prev');
+            if(profile.firma) prevFirma.innerHTML = `<img src="${profile.firma}" style="max-width:100%; max-height:100%; object-fit:contain;">`;
+            else prevFirma.innerHTML = `<span style="color: var(--text-muted); font-size: 12px;">Sin firma</span>`;
+
             document.getElementById('t-dark').checked = document.body.classList.contains('dark-mode');
             uiColores();
             document.getElementById('modal-perfil').style.display = 'flex';
@@ -668,10 +679,31 @@
             }
         }
 
+        function cargarFirma(e) {
+            if(e.target.files && e.target.files[0]) {
+                const lector = new FileReader();
+                lector.onload = evt => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const MAX_W = 400; const MAX_H = 200; 
+                        let w = img.width; let h = img.height;
+                        if (w > MAX_W) { h *= MAX_W / w; w = MAX_W; }
+                        if (h > MAX_H) { w *= MAX_H / h; h = MAX_H; }
+                        const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+                        // Usamos PNG para intentar conservar la transparencia si es que la imagen original la tiene
+                        profile.firma = canvas.toDataURL('image/png');
+                        document.getElementById('edit-firma-prev').innerHTML = `<img src="${profile.firma}" style="max-width:100%; max-height:100%; object-fit:contain;">`;
+                    };
+                    img.src = evt.target.result;
+                }; lector.readAsDataURL(e.target.files[0]);
+            }
+        }
+
         function guardarPerfil() {
             profile.nombre = document.getElementById('edit-name').value.trim() || "Joel";
             try { localStorage.setItem('tohka_sch_prof', JSON.stringify(profile)); actualizarHeader(); cerrarModal('modal-perfil'); } 
-            catch (e) { mostrarAlerta("Error", "La foto pesa demasiado. Intenta con otra."); }
+            catch (e) { mostrarAlerta("Error", "La foto o la firma pesan demasiado. Intenta con una imagen más ligera."); }
         }
 
         function uiColores() {
@@ -859,7 +891,7 @@
 
                 let mid = t.trabajado 
                     ? `<div class="s-time">${t.start} - ${t.end}</div><div class="s-tags">${b.join('')}</div>${liveBadge}${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`
-                    : `<div class="s-time" style="color:var(--text-muted);">Día Libre / Ausencia</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`;
+                    : `<div class="s-time" style="color:var(--text-muted);">Día Libre</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`;
 
                 html += `<div class="shift-card fade-in ${esHoy?'today':''}"><div class="s-date"><div class="s-day">${esHoy?'HOY':DIAS_SHORT[dObj.getDay()]}</div><div class="s-num">${td}</div></div><div class="s-info">${mid}</div><div class="s-right"><div style="display:flex; gap:4px;">${btnAccion}<button class="btn-icon-action btn-del" onclick="eliminarTurno(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></div>${t.trabajado ? `<div class="s-hrs">${t.hrs}h</div>` : ''}</div></div>`;
             });
@@ -890,7 +922,7 @@
                     filas += `<div class="row-day"><div class="r-date">${td} ${DIAS_SHORT[dObj.getDay()]}</div><div class="r-det">${info}</div><div class="r-hrs">${t.hrs>0?t.hrs+'h':'-'}</div></div>`;
                 });
 
-                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div class="acc-actions"><button class="btn-copy" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2-2v8a2 2 0 002 2z" /></svg> Texto</button><button class="btn-pdf" onclick="abrirModalFirma('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Generar PDF</button></div></div></div>`;
+                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div class="acc-actions"><button class="btn-copy" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2-2v8a2 2 0 002 2z" /></svg> Texto</button><button class="btn-pdf" onclick="procesarPDF('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Generar PDF</button></div></div></div>`;
             });
             cont.innerHTML = html;
         }
@@ -908,52 +940,15 @@
             navigator.clipboard.writeText(txt).then(() => mostrarAlerta("¡Éxito!", "Copiado al portapapeles."));
         }
 
-        // --- SISTEMA DE FIRMA Y PDF ---
-        let sigPad, sigCtx;
-        let isSigning = false;
+        // --- SISTEMA DE PDF CON FIRMA ESCANEADA ---
+        function procesarPDF(key, mes, anio) {
+            if(!profile.firma) {
+                mostrarAlerta("Firma Faltante", "Ve a 'Configuración' (tocando tu foto de perfil arriba a la derecha) y sube la imagen de tu firma escaneada primero para poder generar el PDF.");
+                return;
+            }
 
-        function inicializarCanvasFirma() {
-            sigPad = document.getElementById('pad-firma');
-            sigCtx = sigPad.getContext('2d');
-            const rect = sigPad.getBoundingClientRect();
-            sigPad.width = rect.width; sigPad.height = 150;
-            sigCtx.lineWidth = 3; sigCtx.lineCap = 'round'; sigCtx.strokeStyle = '#000';
-
-            const startPos = (e) => { isSigning = true; dibujar(e); e.preventDefault(); };
-            const endPos = (e) => { isSigning = false; sigCtx.beginPath(); e.preventDefault(); };
-            const dibujar = (e) => {
-                if(!isSigning) return;
-                const r = sigPad.getBoundingClientRect();
-                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - r.left;
-                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - r.top;
-                sigCtx.lineTo(x, y); sigCtx.stroke(); sigCtx.beginPath(); sigCtx.moveTo(x, y);
-                e.preventDefault();
-            };
-
-            sigPad.addEventListener('mousedown', startPos); sigPad.addEventListener('mouseup', endPos); sigPad.addEventListener('mousemove', dibujar);
-            sigPad.addEventListener('touchstart', startPos, {passive: false}); 
-            sigPad.addEventListener('touchend', endPos, {passive: false}); 
-            sigPad.addEventListener('touchmove', dibujar, {passive: false});
-        }
-
-        function limpiarFirma() { sigCtx.clearRect(0, 0, sigPad.width, sigPad.height); sigCtx.beginPath(); }
-
-        function abrirModalFirma(key, mes, anio) {
-            document.getElementById('pdf-key').value = key;
-            document.getElementById('pdf-mes').value = mes;
-            document.getElementById('pdf-y').value = anio;
-            limpiarFirma();
-            document.getElementById('modal-firma').style.display = 'flex';
-            setTimeout(inicializarCanvasFirma, 100); 
-        }
-
-        function procesarFirmaYPDF() {
-            cerrarModal('modal-firma');
             mostrarAlerta("Generando PDF...", "Por favor espera unos segundos. El archivo se descargará automáticamente.");
             
-            const key = document.getElementById('pdf-key').value;
-            const mes = document.getElementById('pdf-mes').value;
-            const anio = document.getElementById('pdf-y').value;
             const turnos = db.turnos.filter(t => t.fecha.startsWith(key) && t.trabajado);
             
             let th = 0; let trs = "";
@@ -962,8 +957,6 @@
                 trs += `<tr><td style="padding:10px; border-bottom:1px solid #ddd;">${t.fecha.split('-')[2]}/${t.fecha.split('-')[1]} (${DIAS_SHORT[dObj.getDay()]})</td><td style="padding:10px; border-bottom:1px solid #ddd; text-align:center;">${t.start}</td><td style="padding:10px; border-bottom:1px solid #ddd; text-align:center;">${t.end}</td><td style="padding:10px; border-bottom:1px solid #ddd; text-align:center;">${t.break?'Sí':'No'}</td><td style="padding:10px; border-bottom:1px solid #ddd; text-align:center; font-weight:bold;">${t.hrs}h</td></tr>`;
                 if(t.notas && !t.notas.includes('Odoo')) trs += `<tr><td colspan="5" style="padding:4px 10px 10px 10px; border-bottom:2px solid #eee; font-size:11px; color:#555; font-style:italic;">Nota: ${t.notas}</td></tr>`;
             });
-
-            const firmaImg = sigPad.toDataURL('image/png');
 
             const pdfHtml = `
             <div style="padding: 40px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
@@ -988,7 +981,7 @@
                     <span style="color:#27ae60;">Horas Adicionales (Gratificación): <strong>+${Math.max(0, th-160)} hrs</strong></span>
                 </div>
                 <div style="text-align:center; margin-top:50px;">
-                    <img src="${firmaImg}" style="height:80px; display:block; margin: 0 auto; border-bottom: 1px solid #333; padding-bottom:5px;">
+                    <img src="${profile.firma}" style="height:80px; display:block; margin: 0 auto; border-bottom: 1px solid #333; padding-bottom:5px; object-fit:contain;">
                     <p style="margin-top:5px; font-weight:bold;">Firma del Colaborador</p>
                 </div>
             </div>`;
