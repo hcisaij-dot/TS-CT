@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TOHKA Schedule Premium</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+        /* VARIABLES Y TEMAS */
         :root {
             --bg-body: #f4f5f8; 
             --bg-surface: #ffffff;
@@ -20,7 +22,7 @@
             --warning: #f39c12;
             --border: #e8e8ed;
             --shadow-sm: 0 4px 10px rgba(0,0,0,0.04);
-            --shadow-lg: 0 10px 30px rgba(142, 68, 173, 0.15);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
             --radius: 20px;
         }
 
@@ -30,29 +32,29 @@
             --bg-float: rgba(26, 26, 36, 0.85);
             --text-main: #f0f0f5;
             --text-muted: #a0a0b0; 
-            --primary: #a55eea; 
-            --primary-glow: rgba(165, 94, 234, 0.3);
-            --primary-light: rgba(165, 94, 234, 0.15);
             --border: #2d2d3d;
             --shadow-sm: 0 4px 10px rgba(0,0,0,0.3);
             --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
         }
-        
+
+        body.theme-green { --primary: #10ac84; --primary-glow: rgba(16, 172, 132, 0.25); --primary-light: rgba(16, 172, 132, 0.1); }
+        body.theme-blue { --primary: #2980b9; --primary-glow: rgba(41, 128, 185, 0.25); --primary-light: rgba(41, 128, 185, 0.1); }
+        body.theme-red { --primary: #c0392b; --primary-glow: rgba(192, 57, 43, 0.25); --primary-light: rgba(192, 57, 43, 0.1); }
+        body.theme-orange { --primary: #d35400; --primary-glow: rgba(211, 84, 0, 0.25); --primary-light: rgba(211, 84, 0, 0.1); }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Roboto, sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding-bottom: 100px; transition: background 0.3s ease; }
         h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.5px; }
 
-        /* PANTALLA LOGIN */
         #pantalla-login { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
         .login-box { background: var(--bg-surface); padding: 40px 30px; border-radius: 24px; box-shadow: var(--shadow-lg); text-align: center; width: 90%; max-width: 350px; border: 1px solid var(--border); }
         .login-icon { width: 60px; height: 60px; border-radius: 18px; background: linear-gradient(135deg, var(--primary), #5a2e6e); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 24px; box-shadow: 0 8px 20px var(--primary-glow); margin: 0 auto 20px auto; }
         .pin-input { width: 100%; padding: 15px; text-align: center; font-size: 24px; letter-spacing: 10px; font-weight: 800; background: var(--bg-body); border: 2px solid var(--border); border-radius: 14px; color: var(--text-main); outline: none; margin-bottom: 20px; transition: 0.2s; }
         .pin-input:focus { border-color: var(--primary); }
 
-        /* HEADER & PERFIL */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; position: sticky; top: 0; z-index: 50; background: linear-gradient(to bottom, var(--bg-body) 80%, transparent); }
         .logo-box { display: flex; align-items: center; gap: 10px; }
-        .logo-icon { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), #5a2e6e); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: 0 4px 10px var(--primary-glow); }
+        .logo-icon { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), #2c3e50); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: 0 4px 10px var(--primary-glow); }
         .logo-text h1 { font-size: 1.2em; line-height: 1; color: var(--text-main); }
         .logo-text span { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; }
         .profile-pill { display: flex; align-items: center; gap: 10px; background: var(--bg-surface); padding: 5px 15px 5px 5px; border-radius: 30px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); cursor: pointer; transition: transform 0.2s; }
@@ -61,14 +63,12 @@
         .p-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .p-name { font-size: 13px; font-weight: 600; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* ESTRUCTURA */
         .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
         .fade-in { animation: smoothFade 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes smoothFade { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: smoothFade 0.2s ease-out forwards; }
 
-        /* DASHBOARD */
         .hero-card { background: var(--bg-surface); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow-sm); margin-bottom: 25px; border: 1px solid var(--border); position: relative; overflow: hidden; }
         .hero-card::before { content: ''; position: absolute; left: 0; top: 0; width: 6px; height: 100%; background: var(--primary); }
         .hero-card.goal-met::before { background: var(--gold); }
@@ -77,12 +77,11 @@
         .hc-val { font-size: 32px; font-weight: 800; color: var(--text-main); line-height: 1; }
         .hc-val span { font-size: 16px; color: var(--text-muted); }
         .bar-bg { width: 100%; height: 12px; background: var(--bg-body); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
-        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #b33771); border-radius: 6px; transition: width 0.8s ease; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 6px; transition: width 0.8s ease; }
         .goal-met .bar-fill { background: linear-gradient(90deg, #f1c40f, #e67e22); }
         .hc-extra { font-size: 12px; font-weight: 700; color: var(--gold); margin-top: 10px; text-align: right; display: none; }
         .goal-met .hc-extra { display: block; }
 
-        /* TARJETAS DE TURNO */
         .section-title { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
         .shift-card { background: var(--bg-surface); border-radius: var(--radius); padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); align-items: center; }
         .shift-card.today { border-color: var(--primary); background: var(--primary-light); }
@@ -97,7 +96,6 @@
         .tag.feriado { background: rgba(245, 166, 35, 0.1); color: var(--gold); border: 1px solid rgba(245, 166, 35, 0.2);}
         .s-note { font-size: 12px; color: var(--text-muted); margin-top: 5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* BOTONES LATERALES TARJETA */
         .s-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; min-height: 65px; gap: 5px; }
         .s-hrs { font-size: 14px; font-weight: 800; color: var(--accent); background: rgba(46, 204, 113, 0.1); padding: 4px 8px; border-radius: 8px; }
         .btn-icon-action { background: transparent; border: none; padding: 6px; cursor: pointer; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
@@ -111,7 +109,9 @@
         .live-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse 1.5s infinite; }
         .live-badge { display: flex; align-items: center; font-size: 11px; font-weight: 800; color: var(--accent); margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;}
 
-        /* HISTORIAL */
+        .search-bar { width: 100%; padding: 14px 20px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; color: var(--text-main); font-size: 14px; font-weight: 600; outline: none; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+        .search-bar:focus { border-color: var(--primary); }
+
         .acc-item { background: var(--bg-surface); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 15px; overflow: hidden; box-shadow: var(--shadow-sm); }
         .acc-head { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .acc-t { font-size: 16px; font-weight: 700; text-transform: capitalize; color: var(--text-main); }
@@ -127,10 +127,11 @@
         .r-det { flex: 1; color: var(--text-muted); font-weight: 500; }
         .r-hrs { font-weight: 800; color: var(--text-main); width: 40px; text-align: right; }
         
-        .btn-copy { flex:1; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; transition: transform 0.2s; box-shadow: var(--shadow-sm); }
+        .btn-copy { flex:1; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 12px; transition: transform 0.2s; box-shadow: var(--shadow-sm); }
         .btn-copy:active { transform: scale(0.97); background: var(--border); }
+        .btn-pdf { flex:1; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 12px; transition: transform 0.2s; box-shadow: 0 4px 10px var(--primary-glow); }
+        .btn-pdf:active { transform: scale(0.97); }
 
-        /* MODALES MEJORADOS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-card { background: var(--bg-surface); width: 90%; max-width: 450px; padding: 25px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 90vh; overflow-y: auto; scrollbar-width: none; }
         .modal-card::-webkit-scrollbar { display: none; }
@@ -143,7 +144,6 @@
         }
         .m-title { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 20px; text-align: center; }
 
-        /* FORMULARIOS */
         .touch-flow-group { margin-bottom: 20px; }
         .tf-label { display: block; font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
         .tf-row { display: flex; align-items: center; gap: 10px; background: var(--bg-body); padding: 8px; border-radius: 16px; border: 1px solid var(--border); }
@@ -151,6 +151,11 @@
         .tf-scroll::-webkit-scrollbar { display: none; }
         .t-chip { padding: 8px 14px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; font-size: 16px; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: 0.2s; user-select: none; flex-shrink: 0; }
         .t-chip.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px var(--primary-glow); transform: scale(1.05); }
+        
+        .theme-selector { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .theme-btn { width: 35px; height: 35px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: 0.2s; }
+        .theme-btn.active { border-color: var(--text-main); transform: scale(1.1); }
+
         .t-min-toggle { display: flex; flex-direction: column; gap: 4px; background: var(--bg-surface); padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
         .t-min-btn { padding: 4px 10px; font-size: 12px; font-weight: 800; border-radius: 6px; color: var(--text-muted); cursor: pointer; transition: 0.2s; text-align: center;}
         .t-min-btn.active { background: var(--text-main); color: var(--bg-surface); }
@@ -196,9 +201,11 @@
         
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .shake { animation: shake 0.3s ease-in-out; }
+
+        #pad-firma { width: 100%; height: 200px; background: #fff; border: 2px dashed var(--border); border-radius: 14px; cursor: crosshair; touch-action: none; margin-bottom: 15px; }
     </style>
 </head>
-<body>
+<body class="theme-purple">
 
     <div id="pantalla-login">
         <div class="login-box">
@@ -241,6 +248,21 @@
         </div>
     </div>
 
+    <div id="modal-firma" class="modal-overlay" style="z-index: 2800;" onclick="if(event.target === this) cerrarModal('modal-firma')">
+        <div class="modal-card" style="max-width: 400px; text-align: center;">
+            <h3 style="color: var(--text-main); margin-bottom: 10px;">Firma Digital</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Dibuja tu firma para adjuntarla en el reporte PDF oficial.</p>
+            <canvas id="pad-firma"></canvas>
+            <div class="btn-split" style="margin-top: 0;">
+                <button onclick="limpiarFirma()" class="b-can">Borrar Firma</button>
+                <button onclick="procesarFirmaYPDF()" class="b-sav">Exportar PDF</button>
+            </div>
+            <input type="hidden" id="pdf-key">
+            <input type="hidden" id="pdf-mes">
+            <input type="hidden" id="pdf-y">
+        </div>
+    </div>
+
     <div class="header">
         <div class="logo-box">
             <div class="logo-icon">TS</div>
@@ -267,8 +289,10 @@
             <h3 class="section-title">Próximos Turnos</h3>
             <div id="lista-turnos"></div>
         </div>
+        
         <div id="tab-historial" class="tab-content fade-in">
-            <h3 class="section-title" style="margin-bottom: 20px;">Registro Mensual</h3>
+            <h3 class="section-title" style="margin-bottom: 15px;">Registro Mensual</h3>
+            <input type="text" id="in-buscar-hist" class="search-bar" placeholder="🔍 Buscar fechas, notas, fallos..." oninput="renderHistorial()">
             <div id="lista-historial"></div>
         </div>
     </div>
@@ -289,7 +313,9 @@
     <div id="modal-form" class="modal-overlay" onclick="if(event.target === this) cerrarModal('modal-form')">
         <div class="modal-card">
             <div class="m-title" style="margin-bottom: 15px;">Agendar Turno</div>
+            
             <div style="margin-bottom: 15px;"><input type="date" id="in-fecha" onchange="evaluarReglasAutomaticas()" style="margin-bottom: 0;"></div>
+            
             <label class="check-row active" id="cr-trabajado" style="margin-bottom: 10px;">
                 <span class="check-text">✅ Asistí al trabajo</span>
                 <div class="switch"><input type="checkbox" id="in-trabajado" checked onchange="evaluarReglasAutomaticas()"><span class="slider"></span></div>
@@ -370,14 +396,30 @@
                     <input type="file" accept="image/*" style="display:none;" onchange="cargarFoto(event)">
                 </label>
             </div>
+            
             <div style="margin-bottom: 20px;">
                 <span class="tf-label">Nombre de Usuario</span>
                 <input type="text" id="edit-name" placeholder="Ej. Joel" style="margin-bottom:0;">
             </div>
-            <label class="check-row" id="cr-dark" style="margin-bottom: 20px;">
+
+            <span class="tf-label" style="margin-top:10px;">Apariencia</span>
+            <div class="theme-selector">
+                <div class="theme-btn active" style="background:#8e44ad;" onclick="setTheme('purple', this)"></div>
+                <div class="theme-btn" style="background:#10ac84;" onclick="setTheme('green', this)"></div>
+                <div class="theme-btn" style="background:#2980b9;" onclick="setTheme('blue', this)"></div>
+                <div class="theme-btn" style="background:#c0392b;" onclick="setTheme('red', this)"></div>
+                <div class="theme-btn" style="background:#d35400;" onclick="setTheme('orange', this)"></div>
+            </div>
+
+            <label class="check-row" id="cr-dark" style="margin-bottom: 15px;">
                 <span class="check-text">🌙 Modo Oscuro</span>
                 <div class="switch"><input type="checkbox" id="t-dark" onchange="alternarModoOscuro()"><span class="slider"></span></div>
             </label>
+            <label class="check-row" id="cr-notif" style="margin-bottom: 20px;">
+                <span class="check-text">🔔 Recordatorio 19:00</span>
+                <div class="switch"><input type="checkbox" id="t-notif" onchange="toggleNotifications()"><span class="slider"></span></div>
+            </label>
+
             <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
                 <span class="tf-label" style="color: var(--primary); margin-bottom: 5px;">🛡️ Gestión de Datos y Restauración</span>
                 <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">Tus turnos se guardan automáticamente en Google Drive. Usa estas opciones solo si necesitas mover tus datos de un celular a otro manualmente.</p>
@@ -393,64 +435,113 @@
         </div>
     </div>
 
+    <div id="pdf-container" style="display:none; padding: 40px; background: white; color: black; font-family: sans-serif;"></div>
+
     <script>
         const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzyW__j3YSl5skDVfcMKopLKoUDkRBYIs8G79ng85fYhs616KJKb8mVLdHxkwtIrXzS/exec";
         const PIN_ACCESO = "4425"; 
 
         let db = { turnos: [] };
-        let profile = { nombre: "Joel", img: "" }; 
+        let profile = { nombre: "Joel", img: "", color: "purple", notifications: false }; 
         let stateTime = { inH: 8, inM: "00", outH: 14, outM: "00" };
 
         const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         const DIAS_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
         document.addEventListener("DOMContentLoaded", () => {
-            const saveDB = localStorage.getItem('tohka_sch_v3');
+            const saveDB = localStorage.getItem('tohka_sch_v4');
             if(saveDB) db = JSON.parse(saveDB);
+            else if(localStorage.getItem('tohka_sch_v3')) { db = JSON.parse(localStorage.getItem('tohka_sch_v3')); localStorage.setItem('tohka_sch_v4', JSON.stringify(db)); }
+            
             const saveProf = localStorage.getItem('tohka_sch_prof');
             if(saveProf) profile = JSON.parse(saveProf);
+            
             if(localStorage.getItem('tohka_theme') === 'dark') {
                 document.body.classList.add('dark-mode');
                 document.getElementById('t-dark').checked = true;
             }
+
+            aplicarTemaElegido();
+            document.getElementById('t-notif').checked = profile.notifications;
+            
             construirChipsHora();
             actualizarHeader();
             renderUI();
-            setInterval(renderUI, 60000); 
+            setInterval(loopMinuto, 60000); 
+            inicializarCanvasFirma();
         });
 
-        // NUEVA FUNCIÓN DE VERIFICACIÓN AUTOMÁTICA DE PIN
+        function loopMinuto() {
+            renderUI(); 
+            if(profile.notifications) {
+                const n = new Date();
+                if(n.getHours() === 19 && n.getMinutes() === 0) {
+                    if(localStorage.getItem('last_notif_day') !== n.getDate().toString()) {
+                        const hoyStr = new Date(Date.now() - n.getTimezoneOffset()*60000).toISOString().split('T')[0];
+                        if(!db.turnos.find(t => t.fecha === hoyStr)) {
+                            if(Notification.permission === "granted") {
+                                new Notification("Schedule Pro", { body: "¡Hola! No olvides registrar tu turno o descanso de hoy." });
+                            }
+                        }
+                        localStorage.setItem('last_notif_day', n.getDate().toString());
+                    }
+                }
+            }
+        }
+
+        // --- SISTEMA DE LOGIN ---
         function verificarPin() {
             const pinInput = document.getElementById('login-pin');
             if(pinInput.value === PIN_ACCESO) {
                 document.getElementById('pantalla-login').style.opacity = "0";
                 setTimeout(() => { document.getElementById('pantalla-login').style.display = "none"; }, 300);
-                pinInput.blur(); // Oculta el teclado del celular
+                pinInput.blur(); 
             } else {
                 const err = document.getElementById('login-err');
                 err.style.display = "block";
                 document.querySelector('.login-box').classList.add('shake');
                 setTimeout(() => document.querySelector('.login-box').classList.remove('shake'), 300);
-                pinInput.value = ""; // Borra el PIN para intentar de nuevo
+                pinInput.value = ""; 
             }
         }
-
-        // ESCUCHA CADA TECLA PRESIONADA
         document.getElementById('login-pin').addEventListener('input', function (e) {
             document.getElementById('login-err').style.display = "none";
-            if (this.value.length === 4) {
-                verificarPin();
-            }
+            if (this.value.length === 4) verificarPin();
         });
 
         function syncToGoogleDrive(turno, action = "add") {
             const payload = { ...turno, action: action };
-            fetch(GOOGLE_APP_URL, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                headers: { 'Content-Type': 'text/plain' }, 
-                body: JSON.stringify(payload) 
-            }).catch(e => {});
+            fetch(GOOGLE_APP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) }).catch(e => {});
+        }
+
+        // --- MANEJO DE TEMAS DE COLOR ---
+        function setTheme(color, btn) {
+            profile.color = color;
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            aplicarTemaElegido();
+        }
+        function aplicarTemaElegido() {
+            document.body.classList.remove('theme-purple', 'theme-green', 'theme-blue', 'theme-red', 'theme-orange');
+            if(profile.color && profile.color !== 'purple') document.body.classList.add(`theme-${profile.color}`);
+            
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            const colores = ['purple', 'green', 'blue', 'red', 'orange'];
+            const idx = colores.indexOf(profile.color || 'purple');
+            if(idx >= 0) document.querySelectorAll('.theme-btn')[idx].classList.add('active');
+        }
+
+        function toggleNotifications() {
+            const activo = document.getElementById('t-notif').checked;
+            if(activo && Notification.permission !== "granted") {
+                Notification.requestPermission().then(p => {
+                    if(p !== "granted") {
+                        mostrarAlerta("Permiso Denegado", "Debes permitir las notificaciones en tu navegador.");
+                        document.getElementById('t-notif').checked = false;
+                        profile.notifications = false;
+                    } else { profile.notifications = true; }
+                });
+            } else { profile.notifications = activo; }
         }
 
         function construirChipsHora() {
@@ -523,7 +614,7 @@
             } catch(e) { mostrarAlerta("Error", "El código ingresado no es válido."); }
         }
 
-        function guardarData() { localStorage.setItem('tohka_sch_v3', JSON.stringify(db)); renderUI(); }
+        function guardarData() { localStorage.setItem('tohka_sch_v4', JSON.stringify(db)); renderUI(); }
         
         function alternarModoOscuro() { 
             const isD = document.body.classList.toggle('dark-mode');
@@ -587,16 +678,18 @@
             document.getElementById('cr-trabajado').classList.toggle('active', document.getElementById('in-trabajado').checked);
             document.getElementById('cr-feriado').classList.toggle('active', document.getElementById('in-feriado').checked);
             document.getElementById('cr-break').classList.toggle('active', document.getElementById('in-break').checked);
-            document.getElementById('cr-dark').classList.toggle('active', document.getElementById('t-dark').checked);
+            if(document.getElementById('cr-dark')) document.getElementById('cr-dark').classList.toggle('active', document.getElementById('t-dark').checked);
         }
 
         function abrirModalTurno() {
             const tz = new Date().getTimezoneOffset() * 60000;
             document.getElementById('in-fecha').value = new Date(Date.now() - tz).toISOString().split('T')[0];
-            document.getElementById('in-trabajado').checked = true; document.getElementById('in-feriado').checked = false; 
+            document.getElementById('in-trabajado').checked = true; 
+            document.getElementById('in-feriado').checked = false; 
             const esSab = new Date().getDay() === 6;
             setHour('in', esSab ? 9 : 8); setMins('in', '00');
             setHour('out', esSab ? 14 : 18); setMins('out', '00');
+            document.getElementById('in-notas').value = ""; 
             evaluarReglasAutomaticas(); document.getElementById('modal-form').style.display = 'flex';
         }
 
@@ -612,10 +705,15 @@
             const oBox = document.getElementById('box-odoo'); const oTxt = document.getElementById('txt-odoo');
             const cBrk = document.getElementById('in-break');
 
-            oBox.classList.remove('visible'); nota.value = "";
+            oBox.classList.remove('visible');
             secH.style.display = trab ? "block" : "none";
 
-            if(!trab) { nota.value = feri ? "No se labora por día libre y feriado." : "Día no laborado."; return; }
+            if(!trab) { 
+                if(nota.value === "" || nota.value.includes("Justificar")) {
+                    nota.value = feri ? "No se labora por día libre y feriado." : "Día no laborado."; 
+                }
+                return; 
+            }
 
             let hrs = (stateTime.outH + (stateTime.outM==='30'?0.5:0)) - (stateTime.inH + (stateTime.inM==='30'?0.5:0));
             if(hrs < 0) hrs += 24;
@@ -633,13 +731,17 @@
             cBrk.checked = aplBrk; uiColores();
             if(alertOdoo.length > 0) {
                 oTxt.innerText = "⚠️ Justificar en Odoo por " + alertOdoo.join(" y ");
-                oBox.classList.add('visible'); nota.value = "Justificar en Odoo por " + alertOdoo.join(" y ") + ".";
+                oBox.classList.add('visible'); 
+                if(!nota.value.includes("Justificar")) nota.value = "Justificar en Odoo por " + alertOdoo.join(" y ") + ".";
+            } else {
+                 if(nota.value.includes("Justificar en Odoo")) nota.value = "";
             }
         }
 
         function guardarRegistro() {
             const f = document.getElementById('in-fecha').value; if(!f) { mostrarAlerta("Aviso", "Selecciona fecha."); return; }
-            const trab = document.getElementById('in-trabajado').checked; const feri = document.getElementById('in-feriado').checked;
+            const trab = document.getElementById('in-trabajado').checked; 
+            const feri = document.getElementById('in-feriado').checked;
             const not = document.getElementById('in-notas').value.trim();
             let alertOdoo = false;
 
@@ -746,14 +848,18 @@
                     const n = new Date(); const nMin = n.getHours() * 60 + n.getMinutes();
                     const [sh, sm] = t.start.split(':').map(Number); const sMin = sh*60 + sm;
                     const [eh, em] = t.end.split(':').map(Number); let eMin = eh*60 + em; if(eMin<sMin) eMin+=24*60;
-                    if(nMin >= sMin && nMin <= eMin) liveBadge = `<div class="live-badge"><span class="live-dot"></span> EN TURNO</div>`;
+                    
+                    if(nMin >= sMin && nMin <= eMin) {
+                        let fMin = eMin - nMin; let hF = Math.floor(fMin/60); let mF = fMin%60;
+                        liveBadge = `<div class="live-badge"><span class="live-dot"></span> EN TURNO (Faltan ${hF}h ${mF}m)</div>`;
+                    }
                     else if(nMin > eMin) liveBadge = `<div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-top:5px;">🏁 FINALIZADO</div>`;
                     else liveBadge = `<div style="font-size:11px; font-weight:800; color:var(--gold); margin-top:5px;">⏳ PRÓXIMO</div>`;
                 }
 
                 let mid = t.trabajado 
                     ? `<div class="s-time">${t.start} - ${t.end}</div><div class="s-tags">${b.join('')}</div>${liveBadge}${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`
-                    : `<div class="s-time" style="color:var(--text-muted);">Día Libre</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`;
+                    : `<div class="s-time" style="color:var(--text-muted);">Día Libre / Ausencia</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`;
 
                 html += `<div class="shift-card fade-in ${esHoy?'today':''}"><div class="s-date"><div class="s-day">${esHoy?'HOY':DIAS_SHORT[dObj.getDay()]}</div><div class="s-num">${td}</div></div><div class="s-info">${mid}</div><div class="s-right"><div style="display:flex; gap:4px;">${btnAccion}<button class="btn-icon-action btn-del" onclick="eliminarTurno(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></div>${t.trabajado ? `<div class="s-hrs">${t.hrs}h</div>` : ''}</div></div>`;
             });
@@ -762,9 +868,14 @@
 
         function renderHistorial() {
             const cont = document.getElementById('lista-historial');
-            if(db.turnos.length === 0) { cont.innerHTML = `<div class="empty-state"><svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><br>Historial vacío.</div>`; return; }
+            const term = document.getElementById('in-buscar-hist').value.toLowerCase();
+            
+            let res = db.turnos;
+            if(term) res = res.filter(t => t.fecha.includes(term) || (t.notas && t.notas.toLowerCase().includes(term)));
+            
+            if(res.length === 0) { cont.innerHTML = `<div class="empty-state"><svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><br>No hay resultados.</div>`; return; }
 
-            let grupos = {}; db.turnos.forEach(t => { const k = t.fecha.substring(0, 7); if(!grupos[k]) grupos[k] = []; grupos[k].push(t); });
+            let grupos = {}; res.forEach(t => { const k = t.fecha.substring(0, 7); if(!grupos[k]) grupos[k] = []; grupos[k].push(t); });
 
             let html = "";
             Object.keys(grupos).sort().reverse().forEach(k => {
@@ -775,11 +886,11 @@
                 let filas = "";
                 turnos.forEach(t => {
                     const [ty, tm, td] = t.fecha.split('-'); const dObj = new Date(ty, tm-1, td);
-                    let info = t.trabajado ? `${t.start} - ${t.end} ${t.break?'(Break)':''}` : (t.esFeriado ? "Feriado Libre" : "Ausencia");
+                    let info = t.trabajado ? `${t.start} - ${t.end} ${t.break?'(-1h)':''}` : (t.esFeriado ? "Feriado Libre" : "Ausencia");
                     filas += `<div class="row-day"><div class="r-date">${td} ${DIAS_SHORT[dObj.getDay()]}</div><div class="r-det">${info}</div><div class="r-hrs">${t.hrs>0?t.hrs+'h':'-'}</div></div>`;
                 });
 
-                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div class="acc-actions"><button class="btn-copy" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2-2v8a2 2 0 002 2z" /></svg> Copiar Texto</button></div></div></div>`;
+                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div class="acc-actions"><button class="btn-copy" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2-2v8a2 2 0 002 2z" /></svg> Texto</button><button class="btn-pdf" onclick="abrirModalFirma('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Generar PDF</button></div></div></div>`;
             });
             cont.innerHTML = html;
         }
@@ -795,6 +906,109 @@
             txt += `\n*TOTAL MENSUAL: ${th} HORAS*`;
             if(th > 160) txt += `\n*HORAS ADICIONALES: +${th - 160} HORAS*`;
             navigator.clipboard.writeText(txt).then(() => mostrarAlerta("¡Éxito!", "Copiado al portapapeles."));
+        }
+
+        // --- SISTEMA DE FIRMA Y PDF ---
+        let sigPad, sigCtx;
+        let isSigning = false;
+
+        function inicializarCanvasFirma() {
+            sigPad = document.getElementById('pad-firma');
+            sigCtx = sigPad.getContext('2d');
+            const rect = sigPad.getBoundingClientRect();
+            sigPad.width = rect.width; sigPad.height = 150;
+            sigCtx.lineWidth = 3; sigCtx.lineCap = 'round'; sigCtx.strokeStyle = '#000';
+
+            const startPos = (e) => { isSigning = true; dibujar(e); e.preventDefault(); };
+            const endPos = (e) => { isSigning = false; sigCtx.beginPath(); e.preventDefault(); };
+            const dibujar = (e) => {
+                if(!isSigning) return;
+                const r = sigPad.getBoundingClientRect();
+                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - r.left;
+                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - r.top;
+                sigCtx.lineTo(x, y); sigCtx.stroke(); sigCtx.beginPath(); sigCtx.moveTo(x, y);
+                e.preventDefault();
+            };
+
+            sigPad.addEventListener('mousedown', startPos); sigPad.addEventListener('mouseup', endPos); sigPad.addEventListener('mousemove', dibujar);
+            sigPad.addEventListener('touchstart', startPos, {passive: false}); 
+            sigPad.addEventListener('touchend', endPos, {passive: false}); 
+            sigPad.addEventListener('touchmove', dibujar, {passive: false});
+        }
+
+        function limpiarFirma() { sigCtx.clearRect(0, 0, sigPad.width, sigPad.height); sigCtx.beginPath(); }
+
+        function abrirModalFirma(key, mes, anio) {
+            document.getElementById('pdf-key').value = key;
+            document.getElementById('pdf-mes').value = mes;
+            document.getElementById('pdf-y').value = anio;
+            limpiarFirma();
+            document.getElementById('modal-firma').style.display = 'flex';
+            setTimeout(inicializarCanvasFirma, 100); 
+        }
+
+        function procesarFirmaYPDF() {
+            cerrarModal('modal-firma');
+            mostrarAlerta("Generando PDF...", "Por favor espera unos segundos. El archivo se descargará automáticamente.");
+            
+            const key = document.getElementById('pdf-key').value;
+            const mes = document.getElementById('pdf-mes').value;
+            const anio = document.getElementById('pdf-y').value;
+            const turnos = db.turnos.filter(t => t.fecha.startsWith(key) && t.trabajado);
+            
+            let th = 0; let trs = "";
+            turnos.forEach(t => {
+                th += t.hrs; const dObj = new Date(t.fecha.split('-')[0], t.fecha.split('-')[1]-1, t.fecha.split('-')[2]);
+                trs += `<tr><td style="padding:10px; border-bottom:1px solid #ddd;">${t.fecha.split('-')[2]}/${t.fecha.split('-')[1]} (${DIAS_SHORT[dObj.getDay()]})</td><td style="padding:10px; border-bottom:1px solid #ddd; text-align:center;">${t.start}</td><td style="padding:10px; border-bottom:1px solid #ddd; text-align:center;">${t.end}</td><td style="padding:10px; border-bottom:1px solid #ddd; text-align:center;">${t.break?'Sí':'No'}</td><td style="padding:10px; border-bottom:1px solid #ddd; text-align:center; font-weight:bold;">${t.hrs}h</td></tr>`;
+                if(t.notas && !t.notas.includes('Odoo')) trs += `<tr><td colspan="5" style="padding:4px 10px 10px 10px; border-bottom:2px solid #eee; font-size:11px; color:#555; font-style:italic;">Nota: ${t.notas}</td></tr>`;
+            });
+
+            const firmaImg = sigPad.toDataURL('image/png');
+
+            const pdfHtml = `
+            <div style="padding: 40px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
+                <div style="text-align:center; margin-bottom:30px;">
+                    <h1 style="color: #2c3e50; margin:0; font-size:28px;">REPORTE OFICIAL DE HORAS</h1>
+                    <p style="color: #7f8c8d; margin:5px 0 0 0; font-size:14px;">Generado por TOHKA Schedule Pro</p>
+                </div>
+                <div style="margin-bottom:30px; background:#f8f9fa; padding:15px; border-radius:8px;">
+                    <strong>Colaborador:</strong> ${profile.nombre.toUpperCase()}<br>
+                    <strong>Periodo:</strong> ${mes.toUpperCase()} ${anio}<br>
+                    <strong>Fecha de Emisión:</strong> ${new Date().toLocaleDateString()}
+                </div>
+                <table style="width:100%; border-collapse: collapse; font-size:13px; margin-bottom:30px;">
+                    <tr style="background:#2c3e50; color:white;">
+                        <th style="padding:10px; text-align:left;">Fecha</th><th style="padding:10px;">Entrada</th><th style="padding:10px;">Salida</th><th style="padding:10px;">Break</th><th style="padding:10px;">Neto</th>
+                    </tr>
+                    ${trs}
+                </table>
+                <div style="text-align:right; font-size:16px; margin-bottom:50px;">
+                    Base Mensual: <strong>160 hrs</strong><br>
+                    Total Laborado: <strong>${th} hrs</strong><br>
+                    <span style="color:#27ae60;">Horas Adicionales (Gratificación): <strong>+${Math.max(0, th-160)} hrs</strong></span>
+                </div>
+                <div style="text-align:center; margin-top:50px;">
+                    <img src="${firmaImg}" style="height:80px; display:block; margin: 0 auto; border-bottom: 1px solid #333; padding-bottom:5px;">
+                    <p style="margin-top:5px; font-weight:bold;">Firma del Colaborador</p>
+                </div>
+            </div>`;
+
+            const container = document.getElementById('pdf-container');
+            container.innerHTML = pdfHtml;
+            container.style.display = "block";
+
+            const opt = {
+                margin:       0.5,
+                filename:     `Reporte_${profile.nombre.replace(/ /g, '_')}_${mes}_${anio}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(container).save().then(() => {
+                container.style.display = "none";
+                document.getElementById('custom-alert-modal').style.display = 'none'; 
+            });
         }
     </script>
 </body>
