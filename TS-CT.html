@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TOHKA Schedule Premium</title>
+    <style>
+        :root {
+            --bg-body: #f4f5f8; 
+            --bg-surface: #ffffff;
+            --bg-float: rgba(255, 255, 255, 0.85);
+            --text-main: #1c1c21; 
+            --text-muted: #8e8e9f;
+            --primary: #8e44ad; 
+            --primary-glow: rgba(142, 68, 173, 0.25);
+            --primary-light: rgba(142, 68, 173, 0.08);
+            --accent: #2ecc71; 
+            --danger: #ff4757;
+            --gold: #f5a623;
+            --border: #e8e8ed;
+            --shadow-sm: 0 4px 10px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 30px rgba(142, 68, 173, 0.15);
+            --radius: 20px;
+        }
+
+        body.dark-mode {
+            --bg-body: #0d0d12; 
+            --bg-surface: #1a1a24;
+            --bg-float: rgba(26, 26, 36, 0.85);
+            --text-main: #f0f0f5;
+            --text-muted: #7a7a8c;
+            --primary: #a55eea; 
+            --primary-glow: rgba(165, 94, 234, 0.3);
+            --primary-light: rgba(165, 94, 234, 0.15);
+            --border: #2d2d3d;
+            --shadow-sm: 0 4px 10px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Roboto, sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding-bottom: 100px; transition: background 0.3s ease; }
+        h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.5px; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; position: sticky; top: 0; z-index: 50; background: linear-gradient(to bottom, var(--bg-body) 80%, transparent); }
+        .logo-box { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), #5a2e6e); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: 0 4px 10px var(--primary-glow); }
+        .logo-text h1 { font-size: 1.2em; line-height: 1; color: var(--text-main); }
+        .logo-text span { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; }
+
+        .profile-pill { display: flex; align-items: center; gap: 10px; background: var(--bg-surface); padding: 5px 15px 5px 5px; border-radius: 30px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); cursor: pointer; transition: transform 0.2s; }
+        .profile-pill:active { transform: scale(0.95); }
+        .p-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; overflow: hidden; }
+        .p-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .p-name { font-size: 13px; font-weight: 600; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+        .fade-in { animation: smoothFade 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes smoothFade { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: smoothFade 0.2s ease-out forwards; }
+
+        .hero-card { background: var(--bg-surface); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow-sm); margin-bottom: 25px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; left: 0; top: 0; width: 6px; height: 100%; background: var(--primary); }
+        .hero-card.goal-met::before { background: var(--gold); }
+        
+        .hc-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
+        .hc-lbl { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .hc-val { font-size: 32px; font-weight: 800; color: var(--text-main); line-height: 1; }
+        .hc-val span { font-size: 16px; color: var(--text-muted); }
+        
+        .bar-bg { width: 100%; height: 12px; background: var(--bg-body); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #b33771); border-radius: 6px; transition: width 0.8s ease; }
+        .goal-met .bar-fill { background: linear-gradient(90deg, #f1c40f, #e67e22); }
+        .hc-extra { font-size: 12px; font-weight: 700; color: var(--gold); margin-top: 10px; text-align: right; display: none; }
+        .goal-met .hc-extra { display: block; }
+
+        .section-title { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .shift-card { background: var(--bg-surface); border-radius: var(--radius); padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); align-items: center; }
+        .shift-card.today { border-color: var(--primary); background: var(--primary-light); }
+        
+        .s-date { background: var(--bg-body); border-radius: 14px; min-width: 60px; height: 65px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border); }
+        .s-day { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        .s-num { font-size: 22px; font-weight: 800; color: var(--text-main); line-height: 1.1; }
+        
+        .s-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .s-time { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;}
+        .s-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+        .tag { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 8px; background: var(--border); color: var(--text-muted); text-transform: uppercase; }
+        .tag.alert { background: rgba(255, 71, 87, 0.1); color: var(--danger); border: 1px solid rgba(255, 71, 87, 0.2);}
+        .tag.feriado { background: rgba(245, 166, 35, 0.1); color: var(--gold); border: 1px solid rgba(245, 166, 35, 0.2);}
+        .s-note { font-size: 12px; color: var(--text-muted); margin-top: 5px; font-weight: 500; }
+        
+        .s-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 65px; }
+        .s-hrs { font-size: 14px; font-weight: 800; color: var(--accent); background: rgba(46, 204, 113, 0.1); padding: 4px 8px; border-radius: 8px; }
+        .btn-del { background: transparent; border: none; color: var(--text-muted); padding: 5px; cursor: pointer; border-radius: 50%; transition: 0.2s;}
+        .btn-del:active { background: rgba(255, 71, 87, 0.1); color: var(--danger); }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
+        .live-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse 1.5s infinite; }
+        .live-badge { display: flex; align-items: center; font-size: 11px; font-weight: 800; color: var(--accent); margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;}
+
+        .acc-item { background: var(--bg-surface); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 15px; overflow: hidden; box-shadow: var(--shadow-sm); }
+        .acc-head { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .acc-t { font-size: 16px; font-weight: 700; text-transform: capitalize; color: var(--text-main); }
+        .acc-s { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+        .acc-icon { transition: transform 0.3s; color: var(--primary); }
+        .acc-item.open .acc-icon { transform: rotate(180deg); }
+        .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: var(--bg-body); }
+        .acc-item.open .acc-body { max-height: 1500px; }
+        
+        .row-day { display: flex; justify-content: space-between; padding: 12px 20px; border-top: 1px solid var(--border); font-size: 13px; align-items: center; }
+        .r-date { font-weight: 700; color: var(--primary); width: 80px; }
+        .r-det { flex: 1; color: var(--text-muted); font-weight: 500; }
+        .r-hrs { font-weight: 800; color: var(--text-main); width: 40px; text-align: right; }
+        
+        .btn-excel { width: calc(100% - 40px); margin: 15px 20px; background: #107c41; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(16, 124, 65, 0.3);}
+        .btn-excel:active { transform: scale(0.97); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-card { background: var(--bg-surface); width: 90%; max-width: 450px; padding: 30px 25px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 85vh; overflow-y: auto; }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        @media (max-width: 600px) {
+            .modal-overlay { align-items: flex-end; }
+            .modal-card { width: 100%; max-width: 100%; border-radius: 30px 30px 0 0; animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); padding-bottom: 40px; max-height: 90vh;}
+            @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        }
+        
+        .m-title { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 25px; text-align: center; }
+
+        .touch-flow-group { margin-bottom: 20px; }
+        .tf-label { display: block; font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
+        
+        .tf-row { display: flex; align-items: center; gap: 10px; background: var(--bg-body); padding: 8px; border-radius: 16px; border: 1px solid var(--border); }
+        .tf-scroll { flex: 1; display: flex; gap: 6px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 2px; }
+        .tf-scroll::-webkit-scrollbar { display: none; }
+        
+        .t-chip { padding: 8px 14px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; font-size: 16px; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: 0.2s; user-select: none; flex-shrink: 0; }
+        .t-chip.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px var(--primary-glow); transform: scale(1.05); }
+        
+        .t-min-toggle { display: flex; flex-direction: column; gap: 4px; background: var(--bg-surface); padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
+        .t-min-btn { padding: 4px 10px; font-size: 12px; font-weight: 800; border-radius: 6px; color: var(--text-muted); cursor: pointer; transition: 0.2s; text-align: center;}
+        .t-min-btn.active { background: var(--text-main); color: var(--bg-surface); }
+        .t-min-btn.disabled { opacity: 0.3; pointer-events: none; } 
+
+        .check-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; transition: 0.2s; cursor: pointer; }
+        .check-row.active { border-color: var(--primary); background: var(--primary-light); }
+        .check-text { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--text-muted); border-radius: 30px; transition: .3s; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: .3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .odoo-alert { background: rgba(255, 71, 87, 0.08); border-left: 4px solid var(--danger); padding: 12px 15px; border-radius: 10px; margin-bottom: 15px; display: none; align-items: center; gap: 10px; }
+        .odoo-alert.visible { display: flex; animation: smoothFade 0.3s ease; }
+        .odoo-text { color: var(--danger); font-size: 12px; font-weight: 700; }
+
+        input[type="date"], input[type="text"] { width: 100%; padding: 16px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 14px; color: var(--text-main); font-size: 15px; font-weight: 600; font-family: inherit; margin-bottom: 15px; outline: none; }
+        input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; filter: invert(0.5); }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+
+        .btn-split { display: flex; gap: 10px; margin-top: 20px; }
+        .b-can { flex: 1; background: var(--bg-body); color: var(--text-main); font-weight: 700; padding: 16px; border-radius: 14px; border: 1px solid var(--border); cursor: pointer; transition: 0.2s;}
+        .b-can:active { transform: scale(0.95); }
+        .b-sav { flex: 2; background: var(--primary); color: white; font-weight: 700; padding: 16px; border-radius: 14px; border: none; cursor: pointer; box-shadow: 0 4px 15px var(--primary-glow); transition: 0.2s;}
+        .b-sav:active { transform: scale(0.95); }
+
+        .bottom-dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg-float); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 30px; display: flex; padding: 8px 15px; gap: 5px; box-shadow: var(--shadow-lg); z-index: 100; }
+        .dock-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 20px; color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .dock-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
+        
+        .fab { position: fixed; bottom: 90px; right: 25px; width: 60px; height: 60px; border-radius: 30px; background: var(--text-main); color: var(--bg-surface); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); z-index: 90; cursor: pointer; transition: transform 0.2s; }
+        .fab:active { transform: scale(0.9); }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-weight: 500;}
+        
+        .avatar-lg { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; overflow: hidden; border: 3px solid var(--bg-body); margin: 0 auto;}
+        .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+        .btn-upload-foto { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; transition: 0.2s; }
+        .btn-upload-foto:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <div id="custom-alert-modal" class="modal-overlay" style="z-index: 3000;">
+        <div class="modal-card" style="max-width: 350px; text-align: center;">
+            <h3 id="alert-title" style="color: var(--primary); margin-bottom: 10px;"></h3>
+            <p id="alert-message" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.5;"></p>
+            <button class="b-sav" onclick="cerrarModal('custom-alert-modal')" style="width: 100%;">Aceptar</button>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay" style="z-index: 3001;">
+        <div class="modal-card" style="max-width: 350px; text-align: center;">
+            <h3 id="confirm-title" style="margin-bottom: 10px;"></h3>
+            <p id="confirm-message" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;"></p>
+            <div class="btn-split" style="margin-top: 0;">
+                <button onclick="cerrarModal('confirm-modal')" class="b-can" id="btn-confirm-cancel">Cancelar</button>
+                <button id="btn-confirm-action" class="b-sav">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="logo-box">
+            <div class="logo-icon">TS</div>
+            <div class="logo-text">
+                <h1>Schedule Pro</h1>
+                <span>Control de Horas</span>
+            </div>
+        </div>
+        <div class="profile-pill" onclick="abrirModalPerfil()">
+            <div class="p-avatar" id="hdr-avatar">J</div>
+            <div class="p-name" id="hdr-name">Joel</div>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div id="tab-turnos" class="tab-content active fade-in">
+            
+            <div class="hero-card" id="card-progreso">
+                <div class="hc-top">
+                    <div><div class="hc-lbl" id="lbl-mes">Mes Actual</div><div class="hc-extra" id="lbl-extra"></div></div>
+                    <div class="hc-val" id="lbl-hrs">0<span>/160h</span></div>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" id="bar-prog" style="width: 0%;"></div></div>
+            </div>
+
+            <h3 class="section-title">Próximos Turnos</h3>
+            <div id="lista-turnos"></div>
+        </div>
+
+        <div id="tab-historial" class="tab-content fade-in">
+            <h3 class="section-title" style="margin-bottom: 20px;">Registro Mensual</h3>
+            <div id="lista-historial"></div>
+        </div>
+
+    </div>
+
+    <div class="fab" onclick="abrirModalTurno()" id="main-fab">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+    </div>
+
+    <div class="bottom-dock">
+        <div class="dock-btn active" onclick="cambiarPestana('tab-turnos', this)">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Turnos
+        </div>
+        <div class="dock-btn" onclick="cambiarPestana('tab-historial', this)">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg> Historial
+        </div>
+    </div>
+
+    <div id="modal-form" class="modal-overlay" onclick="if(event.target === this) cerrarModal('modal-form')">
+        <div class="modal-card">
+            <div class="m-title">Agendar Turno</div>
+            
+            <input type="date" id="in-fecha" onchange="evaluarReglasAutomaticas()">
+
+            <label class="check-row active" id="cr-trabajado">
+                <span class="check-text">✅ Asistí al trabajo</span>
+                <div class="switch"><input type="checkbox" id="in-trabajado" checked onchange="evaluarReglasAutomaticas()"><span class="slider"></span></div>
+            </label>
+
+            <label class="check-row" id="cr-feriado">
+                <span class="check-text">🇪🇨 Es Feriado Nacional</span>
+                <div class="switch"><input type="checkbox" id="in-feriado" onchange="evaluarReglasAutomaticas()"><span class="slider"></span></div>
+            </label>
+
+            <div id="seccion-horas">
+                <div class="touch-flow-group">
+                    <span class="tf-label">Hora de Entrada (24h)</span>
+                    <div class="tf-row">
+                        <div class="tf-scroll" id="scroll-in-h"></div>
+                        <div class="t-min-toggle">
+                            <div class="t-min-btn active" id="btn-in-00" onclick="setMins('in', '00')">:00</div>
+                            <div class="t-min-btn" id="btn-in-30" onclick="setMins('in', '30')">:30</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="touch-flow-group" style="margin-bottom: 25px;">
+                    <span class="tf-label">Hora de Salida (24h)</span>
+                    <div class="tf-row">
+                        <div class="tf-scroll" id="scroll-out-h"></div>
+                        <div class="t-min-toggle">
+                            <div class="t-min-btn active" id="btn-out-00" onclick="setMins('out', '00')">:00</div>
+                            <div class="t-min-btn" id="btn-out-30" onclick="setMins('out', '30')">:30</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="odoo-alert" id="box-odoo">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    <span class="odoo-text" id="txt-odoo">Justificar en Odoo</span>
+                </div>
+
+                <label class="check-row" id="cr-break">
+                    <span class="check-text">☕ Descontar 1h Break</span>
+                    <div class="switch"><input type="checkbox" id="in-break" onchange="uiColores()"><span class="slider"></span></div>
+                </label>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <span class="tf-label">Notas / Justificación</span>
+                <input type="text" id="in-notas" placeholder="Escribe aquí..." style="margin-bottom: 0;">
+            </div>
+
+            <div class="btn-split">
+                <button class="b-can" onclick="cerrarModal('modal-form')">Cancelar</button>
+                <button class="b-sav" onclick="guardarRegistro()">Guardar Turno</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-perfil" class="modal-overlay" onclick="if(event.target === this) cerrarModal('modal-perfil')">
+        <div class="modal-card">
+            <div class="m-title">Configuración</div>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div class="avatar-lg" id="edit-avatar-prev">J</div>
+                <label class="btn-upload-foto">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                    Cambiar Foto
+                    <input type="file" accept="image/*" style="display:none;" onchange="cargarFoto(event)">
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 30px;">
+                <span class="tf-label">Nombre de Usuario</span>
+                <input type="text" id="edit-name" placeholder="Ej. Joel" style="margin-bottom:0;">
+            </div>
+
+            <label class="check-row" id="cr-dark" style="margin-bottom: 20px;">
+                <span class="check-text">🌙 Modo Oscuro</span>
+                <div class="switch"><input type="checkbox" id="t-dark" onchange="alternarModoOscuro()"><span class="slider"></span></div>
+            </label>
+
+            <div style="margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <span class="tf-label" style="color: var(--primary);">🛡️ Respaldo en la Nube / Copia de Seguridad</span>
+                <div class="btn-split" style="margin-top: 10px;">
+                    <button class="b-can" onclick="generarCodigoSync()" style="font-size: 12px; padding: 12px;">Copia Manual (Texto)</button>
+                    <button class="b-can" onclick="cargarCodigoSync()" style="font-size: 12px; padding: 12px; color: var(--primary); border-color: var(--primary);">Restaurar</button>
+                </div>
+                <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; line-height: 1.4;">Tus turnos se guardan en tu celular y se envían a tu Excel en Google Drive automáticamente.</p>
+            </div>
+
+            <div class="btn-split" style="margin-top: 30px;">
+                <button class="b-can" onclick="cerrarModal('modal-perfil')">Cerrar</button>
+                <button class="b-sav" onclick="guardarPerfil()">Aplicar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzyW__j3YSl5skDVfcMKopLKoUDkRBYIs8G79ng85fYhs616KJKb8mVLdHxkwtIrXzS/exec";
+
+        let db = { turnos: [] };
+        let profile = { nombre: "Joel", img: "" }; 
+        let stateTime = { inH: 8, inM: "00", outH: 14, outM: "00" };
+
+        const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        const DIAS_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const saveDB = localStorage.getItem('tohka_sch_v3');
+            if(saveDB) db = JSON.parse(saveDB);
+            
+            const saveProf = localStorage.getItem('tohka_sch_prof');
+            if(saveProf) profile = JSON.parse(saveProf);
+            
+            if(localStorage.getItem('tohka_theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('t-dark').checked = true;
+            }
+            
+            construirChipsHora();
+            actualizarHeader();
+            renderUI();
+            setInterval(renderUI, 60000); 
+        });
+
+        function syncToGoogleDrive(turno) {
+            fetch(GOOGLE_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(turno)
+            }).catch(err => console.log("Drive Sync Pendiente"));
+        }
+
+        function construirChipsHora() {
+            let htmlIn = ""; let htmlOut = "";
+            for(let i=7; i<=18; i++) {
+                let v = i.toString().padStart(2,'0');
+                htmlIn += `<div class="t-chip" id="chip-in-${i}" onclick="setHour('in', ${i})">${v}</div>`;
+                htmlOut += `<div class="t-chip" id="chip-out-${i}" onclick="setHour('out', ${i})">${v}</div>`;
+            }
+            document.getElementById('scroll-in-h').innerHTML = htmlIn;
+            document.getElementById('scroll-out-h').innerHTML = htmlOut;
+        }
+
+        function setHour(tipo, h) {
+            if(tipo === 'in') { 
+                stateTime.inH = h; 
+                if(h === 18) stateTime.inM = '00'; 
+            } else { 
+                stateTime.outH = h; 
+                if(h === 18) stateTime.outM = '00'; 
+            }
+            pintarChips(); evaluarReglasAutomaticas();
+            const chip = document.getElementById(`chip-${tipo}-${h}`);
+            if(chip) chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+
+        function setMins(tipo, m) {
+            if(tipo === 'in') { 
+                if(stateTime.inH === 18 && m === '30') return; 
+                stateTime.inM = m; 
+            } else { 
+                if(stateTime.outH === 18 && m === '30') return; 
+                stateTime.outM = m; 
+            }
+            pintarChips(); evaluarReglasAutomaticas();
+        }
+
+        function pintarChips() {
+            document.querySelectorAll('.t-chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.t-min-btn').forEach(b => { b.classList.remove('active'); b.classList.remove('disabled'); });
+            
+            const cin = document.getElementById(`chip-in-${stateTime.inH}`); if(cin) cin.classList.add('active');
+            const cout = document.getElementById(`chip-out-${stateTime.outH}`); if(cout) cout.classList.add('active');
+            
+            const in30 = document.getElementById('btn-in-30');
+            if(stateTime.inH === 18) { in30.classList.add('disabled'); stateTime.inM = '00'; }
+            document.getElementById(`btn-in-${stateTime.inM}`).classList.add('active');
+            
+            const out30 = document.getElementById('btn-out-30');
+            if(stateTime.outH === 18) { out30.classList.add('disabled'); stateTime.outM = '00'; }
+            document.getElementById(`btn-out-${stateTime.outM}`).classList.add('active');
+        }
+
+        function mostrarAlerta(titulo, mensaje) { 
+            document.getElementById('alert-title').innerText = titulo; 
+            document.getElementById('alert-message').innerText = mensaje; 
+            document.getElementById('custom-alert-modal').style.display = 'flex'; 
+        }
+
+        function solicitarConfirmacion(mensaje, accion) {
+            document.getElementById('confirm-title').innerText = "¿Estás seguro?";
+            document.getElementById('confirm-message').innerText = mensaje;
+            const btn = document.getElementById('btn-confirm-action');
+            btn.onclick = () => { cerrarModal('confirm-modal'); accion(); };
+            document.getElementById('confirm-modal').style.display = 'flex';
+        }
+
+        function generarCodigoSync() {
+            const txt = btoa(encodeURIComponent(JSON.stringify(db)));
+            navigator.clipboard.writeText(txt).then(() => {
+                mostrarAlerta("¡Código Copiado!", "Código de seguridad copiado a tu portapapeles. Pégalo en WhatsApp o Notas.");
+            });
+        }
+
+        function cargarCodigoSync() {
+            const code = prompt("Pega aquí tu código de sincronización:");
+            if(!code) return;
+            try {
+                const newDb = JSON.parse(decodeURIComponent(atob(code)));
+                if(newDb.turnos) { db = newDb; guardarData(); mostrarAlerta("¡Restaurado!", "Tu historial ha sido recuperado."); } 
+                else throw new Error();
+            } catch(e) { mostrarAlerta("Error", "Código no válido."); }
+        }
+
+        function guardarData() { localStorage.setItem('tohka_sch_v3', JSON.stringify(db)); renderUI(); }
+        
+        function alternarModoOscuro() { 
+            const isD = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('tohka_theme', isD ? 'dark' : 'light');
+            document.getElementById('t-dark').checked = isD;
+            uiColores();
+        }
+
+        function cambiarPestana(id, btn) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.dock-btn').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+            document.getElementById('main-fab').style.display = (id === 'tab-turnos') ? 'flex' : 'none';
+        }
+
+        function cerrarModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function actualizarHeader() {
+            document.getElementById('hdr-name').innerText = profile.nombre || "Usuario";
+            const av = document.getElementById('hdr-avatar');
+            if(profile.img) av.innerHTML = `<img src="${profile.img}">`;
+            else av.innerHTML = (profile.nombre || "U").charAt(0).toUpperCase();
+        }
+
+        function abrirModalPerfil() {
+            document.getElementById('edit-name').value = profile.nombre;
+            const prev = document.getElementById('edit-avatar-prev');
+            if(profile.img) prev.innerHTML = `<img src="${profile.img}">`;
+            else prev.innerHTML = (profile.nombre || "U").charAt(0).toUpperCase();
+            document.getElementById('t-dark').checked = document.body.classList.contains('dark-mode');
+            uiColores();
+            document.getElementById('modal-perfil').style.display = 'flex';
+        }
+
+        function cargarFoto(e) {
+            if(e.target.files && e.target.files[0]) {
+                const lector = new FileReader();
+                lector.onload = evt => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const MAX = 200; let w = img.width; let h = img.height;
+                        if (w > h) { if (w > MAX) { h *= MAX / w; w = MAX; } } else { if (h > MAX) { w *= MAX / h; h = MAX; } }
+                        const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+                        profile.img = canvas.toDataURL('image/jpeg', 0.6);
+                        document.getElementById('edit-avatar-prev').innerHTML = `<img src="${profile.img}">`;
+                    };
+                    img.src = evt.target.result;
+                }; lector.readAsDataURL(e.target.files[0]);
+            }
+        }
+
+        function guardarPerfil() {
+            profile.nombre = document.getElementById('edit-name').value.trim() || "Joel";
+            try { localStorage.setItem('tohka_sch_prof', JSON.stringify(profile)); actualizarHeader(); cerrarModal('modal-perfil'); } 
+            catch (e) { mostrarAlerta("Error", "La foto pesa demasiado. Intenta con otra."); }
+        }
+
+        function uiColores() {
+            document.getElementById('cr-trabajado').classList.toggle('active', document.getElementById('in-trabajado').checked);
+            document.getElementById('cr-feriado').classList.toggle('active', document.getElementById('in-feriado').checked);
+            document.getElementById('cr-break').classList.toggle('active', document.getElementById('in-break').checked);
+            document.getElementById('cr-dark').classList.toggle('active', document.getElementById('t-dark').checked);
+        }
+
+        function abrirModalTurno() {
+            const tz = new Date().getTimezoneOffset() * 60000;
+            document.getElementById('in-fecha').value = new Date(Date.now() - tz).toISOString().split('T')[0];
+            document.getElementById('in-trabajado').checked = true; document.getElementById('in-feriado').checked = false; 
+            const esSab = new Date().getDay() === 6;
+            setHour('in', esSab ? 9 : 8); setMins('in', '00');
+            setHour('out', esSab ? 14 : 18); setMins('out', '00');
+            evaluarReglasAutomaticas(); document.getElementById('modal-form').style.display = 'flex';
+        }
+
+        function evaluarReglasAutomaticas() {
+            uiColores();
+            const fVal = document.getElementById('in-fecha').value; if(!fVal) return;
+            const [y, m, d] = fVal.split('-'); const dObj = new Date(y, m-1, d);
+            const esSabado = dObj.getDay() === 6;
+            const trab = document.getElementById('in-trabajado').checked;
+            const feri = document.getElementById('in-feriado').checked;
+            const secH = document.getElementById('seccion-horas');
+            const nota = document.getElementById('in-notas');
+            const oBox = document.getElementById('box-odoo'); const oTxt = document.getElementById('txt-odoo');
+            const cBrk = document.getElementById('in-break');
+
+            oBox.classList.remove('visible'); nota.value = "";
+            secH.style.display = trab ? "block" : "none";
+
+            if(!trab) { nota.value = feri ? "No se labora por día libre y feriado." : "Día no laborado."; return; }
+
+            let hrs = (stateTime.outH + (stateTime.outM==='30'?0.5:0)) - (stateTime.inH + (stateTime.inM==='30'?0.5:0));
+            if(hrs < 0) hrs += 24;
+
+            let aplBrk = false; let alertOdoo = [];
+
+            if(esSabado) { if(hrs >= 5) aplBrk = true; } 
+            else if(feri) { if(hrs >= 8) aplBrk = true; } 
+            else {
+                if(hrs >= 8) aplBrk = true; 
+                if(stateTime.inH > 8 || (stateTime.inH === 8 && stateTime.inM === '30')) alertOdoo.push("entrada tarde");
+                if(stateTime.outH < 14) alertOdoo.push("salida temprana");
+            }
+
+            cBrk.checked = aplBrk; uiColores();
+            if(alertOdoo.length > 0) {
+                oTxt.innerText = "⚠️ Justificar en Odoo por " + alertOdoo.join(" y ");
+                oBox.classList.add('visible'); nota.value = "Justificar en Odoo por " + alertOdoo.join(" y ") + ".";
+            }
+        }
+
+        function guardarRegistro() {
+            const f = document.getElementById('in-fecha').value; if(!f) { mostrarAlerta("Aviso", "Selecciona fecha."); return; }
+            const trab = document.getElementById('in-trabajado').checked; const feri = document.getElementById('in-feriado').checked;
+            const not = document.getElementById('in-notas').value.trim();
+            let reg = { id: Date.now(), fecha: f, trabajado: trab, esFeriado: feri, notas: not, hrs: 0 };
+
+            if(trab) {
+                const s = `${stateTime.inH.toString().padStart(2,'0')}:${stateTime.inM}`;
+                const e = `${stateTime.outH.toString().padStart(2,'0')}:${stateTime.outM}`;
+                const hBreak = document.getElementById('in-break').checked;
+                let h = (stateTime.outH + (stateTime.outM==='30'?0.5:0)) - (stateTime.inH + (stateTime.inM==='30'?0.5:0));
+                if(h < 0) h += 24;
+                reg.start = s; reg.end = e; reg.break = hBreak; reg.hrs = Math.max(0, h - (hBreak ? 1 : 0));
+            }
+
+            const idx = db.turnos.findIndex(x => x.fecha === f);
+            if(idx >= 0) db.turnos[idx] = reg; else db.turnos.push(reg);
+            db.turnos.sort((a,b) => a.fecha.localeCompare(b.fecha));
+            
+            syncToGoogleDrive(reg);
+
+            guardarData(); cerrarModal('modal-form');
+        }
+
+        function eliminarTurno(id) { solicitarConfirmacion("¿Deseas borrar este registro para siempre?", () => { db.turnos = db.turnos.filter(x => x.id !== id); guardarData(); }); }
+
+        function renderUI() { renderDashboard(); renderHistorial(); }
+
+        function renderDashboard() {
+            const hoyStr = new Date(Date.now() - new Date().getTimezoneOffset()*60000).toISOString().split('T')[0];
+            const [y, m, d] = hoyStr.split('-'); const prefix = `${y}-${m}`;
+            document.getElementById('lbl-mes').innerText = `Progreso de ${MESES[parseInt(m)-1]}`;
+            
+            let hMes = 0; db.turnos.forEach(t => { if(t.fecha.startsWith(prefix)) hMes += t.hrs; });
+            document.getElementById('lbl-hrs').innerHTML = `${hMes}<span>/160h</span>`;
+            
+            const card = document.getElementById('card-progreso'); const extra = document.getElementById('lbl-extra'); const bar = document.getElementById('bar-prog');
+            if(hMes >= 160) { card.classList.add('goal-met'); bar.style.width = "100%"; extra.innerText = `🔥 +${hMes - 160} Horas Adicionales`; } 
+            else { card.classList.remove('goal-met'); bar.style.width = `${(hMes/160)*100}%`; }
+
+            const cont = document.getElementById('lista-turnos');
+            const futuros = db.turnos.filter(t => t.fecha >= hoyStr);
+            
+            if(futuros.length === 0) {
+                cont.innerHTML = `<div class="empty-state"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><br>No tienes turnos agendados.</div>`;
+                return;
+            }
+
+            let html = "";
+            futuros.forEach(t => {
+                const [ty, tm, td] = t.fecha.split('-'); const dObj = new Date(ty, tm-1, td);
+                const esHoy = t.fecha === hoyStr;
+                
+                let b = []; let liveBadge = "";
+                if(t.esFeriado) b.push(`<span class="tag feriado">Feriado</span>`);
+                if(t.trabajado && t.break) b.push(`<span class="tag">Break -1h</span>`);
+                if(t.notas.includes("Odoo")) b.push(`<span class="tag alert">Alerta Odoo</span>`);
+
+                if(esHoy && t.trabajado) {
+                    const n = new Date(); const nMin = n.getHours() * 60 + n.getMinutes();
+                    const [sh, sm] = t.start.split(':').map(Number); const sMin = sh*60 + sm;
+                    const [eh, em] = t.end.split(':').map(Number); let eMin = eh*60 + em; if(eMin<sMin) eMin+=24*60;
+                    
+                    if(nMin >= sMin && nMin <= eMin) liveBadge = `<div class="live-badge"><span class="live-dot"></span> EN TURNO</div>`;
+                    else if(nMin > eMin) liveBadge = `<div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-top:5px;">🏁 FINALIZADO</div>`;
+                    else liveBadge = `<div style="font-size:11px; font-weight:800; color:var(--gold); margin-top:5px;">⏳ PRÓXIMO</div>`;
+                }
+
+                let mid = t.trabajado 
+                    ? `<div class="s-time">${t.start} - ${t.end}</div><div class="s-tags">${b.join('')}</div>${liveBadge}${t.notas?`<div class="s-note">${t.notas}</div>`:''}`
+                    : `<div class="s-time" style="color:var(--text-muted);">Día Libre</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">${t.notas}</div>`:''}`;
+
+                html += `<div class="shift-card fade-in ${esHoy?'today':''}"><div class="s-date"><div class="s-day">${esHoy?'HOY':DIAS_SHORT[dObj.getDay()]}</div><div class="s-num">${td}</div></div><div class="s-info">${mid}</div><div class="s-right"><button class="btn-del" onclick="eliminarTurno(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>${t.trabajado ? `<div class="s-hrs">${t.hrs}h</div>` : ''}</div></div>`;
+            });
+            cont.innerHTML = html;
+        }
+
+        function renderHistorial() {
+            const cont = document.getElementById('lista-historial');
+            if(db.turnos.length === 0) { cont.innerHTML = "<div class='empty-state'>Historial vacío.</div>"; return; }
+
+            let grupos = {}; db.turnos.forEach(t => { const k = t.fecha.substring(0, 7); if(!grupos[k]) grupos[k] = []; grupos[k].push(t); });
+
+            let html = "";
+            Object.keys(grupos).sort().reverse().forEach(k => {
+                const [y, m] = k.split('-'); const nMes = MESES[parseInt(m)-1];
+                const turnos = grupos[k];
+                const thrs = turnos.reduce((s, x) => s + x.hrs, 0); const diasT = turnos.filter(x => x.trabajado).length;
+
+                let filas = "";
+                turnos.forEach(t => {
+                    const [ty, tm, td] = t.fecha.split('-'); const dObj = new Date(ty, tm-1, td);
+                    let info = t.trabajado ? `${t.start} - ${t.end} ${t.break?'(Break)':''}` : (t.esFeriado ? "Feriado Libre" : "Ausencia");
+                    filas += `<div class="row-day"><div class="r-date">${td} ${DIAS_SHORT[dObj.getDay()]}</div><div class="r-det">${info}</div><div class="r-hrs">${t.hrs>0?t.hrs+'h':'-'}</div></div>`;
+                });
+
+                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div style="display:flex;"><button class="btn-copy" style="flex:1;" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Texto</button><button class="btn-excel" style="flex:1; margin-left:0;" onclick="exportarExcelOficial()"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Excel</button></div></div></div>`;
+            });
+            cont.innerHTML = html;
+        }
+
+        function copiarRRHH(key, mes, anio) {
+            const turnos = db.turnos.filter(t => t.fecha.startsWith(key) && t.trabajado);
+            let th = 0; let txt = `*REPORTE DE HORAS: ${profile.nombre.toUpperCase()} - ${mes.toUpperCase()} ${anio}*\n\n`;
+            turnos.forEach(t => {
+                th += t.hrs; const [ty, tm, td] = t.fecha.split('-'); const dObj = new Date(ty, tm-1, td);
+                txt += `• ${td}/${tm} (${DIAS_SHORT[dObj.getDay()]}): ${t.start} - ${t.end} ${t.break?'(-1h Break)':''} = ${t.hrs}h\n`;
+                if(t.notas && !t.notas.includes('Odoo')) txt += `  > Nota: ${t.notas}\n`;
+            });
+            txt += `\n*TOTAL MENSUAL: ${th} HORAS*`;
+            if(th > 160) txt += `\n*HORAS ADICIONALES: +${th - 160} HORAS*`;
+            navigator.clipboard.writeText(txt).then(() => mostrarAlerta("¡Éxito!", "Copiado al portapapeles."));
+        }
+
+        function exportarExcelOficial() {
+             mostrarAlerta("Bóveda Excel", "Tus registros se están enviando y guardando automáticamente en tu archivo de Google Drive 'TS-CT'. ¡Abre Google Sheets para ver tu reporte oficial!");
+        }
+    </script>
+</body>
+</html>
