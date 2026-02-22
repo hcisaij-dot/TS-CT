@@ -17,6 +17,7 @@
             --accent: #2ecc71; 
             --danger: #ff4757;
             --gold: #f5a623;
+            --warning: #f39c12;
             --border: #e8e8ed;
             --shadow-sm: 0 4px 10px rgba(0,0,0,0.04);
             --shadow-lg: 0 10px 30px rgba(142, 68, 173, 0.15);
@@ -40,6 +41,12 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Roboto, sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding-bottom: 100px; transition: background 0.3s ease; }
         h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.5px; }
+
+        #pantalla-login { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+        .login-box { background: var(--bg-surface); padding: 40px 30px; border-radius: 24px; box-shadow: var(--shadow-lg); text-align: center; width: 90%; max-width: 350px; border: 1px solid var(--border); }
+        .login-icon { width: 60px; height: 60px; border-radius: 18px; background: linear-gradient(135deg, var(--primary), #5a2e6e); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 24px; box-shadow: 0 8px 20px var(--primary-glow); margin: 0 auto 20px auto; }
+        .pin-input { width: 100%; padding: 15px; text-align: center; font-size: 24px; letter-spacing: 10px; font-weight: 800; background: var(--bg-body); border: 2px solid var(--border); border-radius: 14px; color: var(--text-main); outline: none; margin-bottom: 20px; transition: 0.2s; }
+        .pin-input:focus { border-color: var(--primary); }
 
         .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; position: sticky; top: 0; z-index: 50; background: linear-gradient(to bottom, var(--bg-body) 80%, transparent); }
         .logo-box { display: flex; align-items: center; gap: 10px; }
@@ -95,8 +102,11 @@
         .s-hrs { font-size: 14px; font-weight: 800; color: var(--accent); background: rgba(46, 204, 113, 0.1); padding: 4px 8px; border-radius: 8px; }
         .btn-del { background: transparent; border: none; color: var(--text-muted); padding: 5px; cursor: pointer; border-radius: 50%; transition: 0.2s;}
         .btn-del:active { background: rgba(255, 71, 87, 0.1); color: var(--danger); }
+        .btn-resolve { background: rgba(243, 156, 18, 0.1); color: var(--warning); border: 1px solid rgba(243, 156, 18, 0.3); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: 0.2s; align-self: flex-start; }
+        .btn-resolve:active { transform: scale(0.95); background: var(--warning); color: white; }
 
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
+        @keyframes pulseOrange { 0% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0); } 100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0); } }
         .live-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse 1.5s infinite; }
         .live-badge { display: flex; align-items: center; font-size: 11px; font-weight: 800; color: var(--accent); margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;}
 
@@ -118,7 +128,7 @@
         .btn-excel:active { transform: scale(0.97); }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-card { background: var(--bg-surface); width: 90%; max-width: 450px; padding: 30px 25px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 85vh; overflow-y: auto; }
+        .modal-card { background: var(--bg-surface); width: 90%; max-width: 450px; padding: 25px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 90vh; overflow-y: auto; }
         @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         @media (max-width: 600px) {
@@ -127,7 +137,7 @@
             @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         }
         
-        .m-title { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 25px; text-align: center; }
+        .m-title { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 20px; text-align: center; }
 
         .touch-flow-group { margin-bottom: 20px; }
         .tf-label { display: block; font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
@@ -144,7 +154,7 @@
         .t-min-btn.active { background: var(--text-main); color: var(--bg-surface); }
         .t-min-btn.disabled { opacity: 0.3; pointer-events: none; } 
 
-        .check-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; transition: 0.2s; cursor: pointer; }
+        .check-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 14px; transition: 0.2s; cursor: pointer; }
         .check-row.active { border-color: var(--primary); background: var(--primary-light); }
         .check-text { font-size: 14px; font-weight: 700; color: var(--text-main); }
         
@@ -159,7 +169,7 @@
         .odoo-alert.visible { display: flex; animation: smoothFade 0.3s ease; }
         .odoo-text { color: var(--danger); font-size: 12px; font-weight: 700; }
 
-        input[type="date"], input[type="text"] { width: 100%; padding: 16px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 14px; color: var(--text-main); font-size: 15px; font-weight: 600; font-family: inherit; margin-bottom: 15px; outline: none; }
+        input[type="date"], input[type="text"] { width: 100%; padding: 16px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 14px; color: var(--text-main); font-size: 15px; font-weight: 600; font-family: inherit; outline: none; }
         input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; filter: invert(0.5); }
         input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
 
@@ -176,20 +186,32 @@
         .fab { position: fixed; bottom: 90px; right: 25px; width: 60px; height: 60px; border-radius: 30px; background: var(--text-main); color: var(--bg-surface); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); z-index: 90; cursor: pointer; transition: transform 0.2s; }
         .fab:active { transform: scale(0.9); }
 
-        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-weight: 500;}
-        
-        .avatar-lg { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; overflow: hidden; border: 3px solid var(--bg-body); margin: 0 auto;}
+        .avatar-lg { width: 70px; height: 70px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; overflow: hidden; border: 3px solid var(--bg-body); margin: 0 auto;}
         .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
-        .btn-upload-foto { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; transition: 0.2s; }
+        .btn-upload-foto { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; transition: 0.2s; }
         .btn-upload-foto:active { transform: scale(0.95); }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .shake { animation: shake 0.3s ease-in-out; }
     </style>
 </head>
 <body>
 
+    <div id="pantalla-login">
+        <div class="login-box">
+            <div class="login-icon">TS</div>
+            <h2 style="margin-bottom: 5px; color: var(--text-main);">Schedule Pro</h2>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Bóveda Privada</p>
+            <input type="password" id="login-pin" class="pin-input" placeholder="••••" maxlength="4" autocomplete="off">
+            <p id="login-err" style="color: var(--danger); font-size: 12px; font-weight: 700; margin-top: -10px; margin-bottom: 15px; display: none;">PIN Incorrecto</p>
+            <button class="b-sav" onclick="verificarPin()" style="width: 100%; padding: 18px; font-size: 16px;">Desbloquear</button>
+        </div>
+    </div>
+
     <div id="custom-alert-modal" class="modal-overlay" style="z-index: 3000;">
         <div class="modal-card" style="max-width: 350px; text-align: center;">
             <h3 id="alert-title" style="color: var(--primary); margin-bottom: 10px;"></h3>
-            <p id="alert-message" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.5;"></p>
+            <p id="alert-message" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto;"></p>
             <button class="b-sav" onclick="cerrarModal('custom-alert-modal')" style="width: 100%;">Aceptar</button>
         </div>
     </div>
@@ -201,6 +223,18 @@
             <div class="btn-split" style="margin-top: 0;">
                 <button onclick="cerrarModal('confirm-modal')" class="b-can" id="btn-confirm-cancel">Cancelar</button>
                 <button id="btn-confirm-action" class="b-sav">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sync-modal" class="modal-overlay" style="z-index: 3002;">
+        <div class="modal-card" style="max-width: 380px; text-align: center;">
+            <h3 style="color: var(--text-main); margin-bottom: 10px;">Restaurar Datos</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Pega aquí el código que copiaste anteriormente para recuperar tu historial.</p>
+            <textarea id="sync-input" style="width: 100%; height: 120px; padding: 15px; border-radius: 14px; border: 2px dashed var(--border); background: var(--bg-body); color: var(--text-main); font-family: monospace; font-size: 12px; outline: none; margin-bottom: 15px; resize: none;"></textarea>
+            <div class="btn-split" style="margin-top: 0;">
+                <button onclick="cerrarModal('sync-modal')" class="b-can">Cancelar</button>
+                <button onclick="ejecutarRestauracion()" class="b-sav">Restaurar</button>
             </div>
         </div>
     </div>
@@ -220,9 +254,7 @@
     </div>
 
     <div class="container">
-        
         <div id="tab-turnos" class="tab-content active fade-in">
-            
             <div class="hero-card" id="card-progreso">
                 <div class="hc-top">
                     <div><div class="hc-lbl" id="lbl-mes">Mes Actual</div><div class="hc-extra" id="lbl-extra"></div></div>
@@ -230,16 +262,13 @@
                 </div>
                 <div class="bar-bg"><div class="bar-fill" id="bar-prog" style="width: 0%;"></div></div>
             </div>
-
             <h3 class="section-title">Próximos Turnos</h3>
             <div id="lista-turnos"></div>
         </div>
-
         <div id="tab-historial" class="tab-content fade-in">
             <h3 class="section-title" style="margin-bottom: 20px;">Registro Mensual</h3>
             <div id="lista-historial"></div>
         </div>
-
     </div>
 
     <div class="fab" onclick="abrirModalTurno()" id="main-fab">
@@ -257,22 +286,19 @@
 
     <div id="modal-form" class="modal-overlay" onclick="if(event.target === this) cerrarModal('modal-form')">
         <div class="modal-card">
-            <div class="m-title">Agendar Turno</div>
-            
-            <input type="date" id="in-fecha" onchange="evaluarReglasAutomaticas()">
-
-            <label class="check-row active" id="cr-trabajado">
+            <div class="m-title" style="margin-bottom: 15px;">Agendar Turno</div>
+            <div style="margin-bottom: 15px;"><input type="date" id="in-fecha" onchange="evaluarReglasAutomaticas()" style="margin-bottom: 0;"></div>
+            <label class="check-row active" id="cr-trabajado" style="margin-bottom: 10px;">
                 <span class="check-text">✅ Asistí al trabajo</span>
                 <div class="switch"><input type="checkbox" id="in-trabajado" checked onchange="evaluarReglasAutomaticas()"><span class="slider"></span></div>
             </label>
-
-            <label class="check-row" id="cr-feriado">
+            <label class="check-row" id="cr-feriado" style="margin-bottom: 15px;">
                 <span class="check-text">🇪🇨 Es Feriado Nacional</span>
                 <div class="switch"><input type="checkbox" id="in-feriado" onchange="evaluarReglasAutomaticas()"><span class="slider"></span></div>
             </label>
 
             <div id="seccion-horas">
-                <div class="touch-flow-group">
+                <div class="touch-flow-group" style="margin-bottom: 15px;">
                     <span class="tf-label">Hora de Entrada (24h)</span>
                     <div class="tf-row">
                         <div class="tf-scroll" id="scroll-in-h"></div>
@@ -282,8 +308,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="touch-flow-group" style="margin-bottom: 25px;">
+                <div class="touch-flow-group" style="margin-bottom: 15px;">
                     <span class="tf-label">Hora de Salida (24h)</span>
                     <div class="tf-row">
                         <div class="tf-scroll" id="scroll-out-h"></div>
@@ -293,71 +318,81 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="odoo-alert" id="box-odoo">
+                <div class="odoo-alert" id="box-odoo" style="margin-bottom: 15px;">
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                     <span class="odoo-text" id="txt-odoo">Justificar en Odoo</span>
                 </div>
-
-                <label class="check-row" id="cr-break">
+                <label class="check-row" id="cr-break" style="margin-bottom: 15px;">
                     <span class="check-text">☕ Descontar 1h Break</span>
                     <div class="switch"><input type="checkbox" id="in-break" onchange="uiColores()"><span class="slider"></span></div>
                 </label>
             </div>
-
-            <div style="margin-top: 20px;">
+            <div>
                 <span class="tf-label">Notas / Justificación</span>
                 <input type="text" id="in-notas" placeholder="Escribe aquí..." style="margin-bottom: 0;">
             </div>
-
-            <div class="btn-split">
+            <div class="btn-split" style="margin-top: 15px;">
                 <button class="b-can" onclick="cerrarModal('modal-form')">Cancelar</button>
                 <button class="b-sav" onclick="guardarRegistro()">Guardar Turno</button>
             </div>
         </div>
     </div>
 
+    <div id="modal-justificar" class="modal-overlay" onclick="if(event.target === this) cerrarModal('modal-justificar')" style="z-index: 2500;">
+        <div class="modal-card" style="max-width: 350px;">
+            <div class="m-title" style="margin-bottom: 10px;">Resolver Alerta</div>
+            <p id="just-desc" style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px; text-align: center; line-height: 1.4;"></p>
+            <label class="check-row" id="cr-justificado" style="border-color: var(--warning); background: rgba(243, 156, 18, 0.05); cursor: pointer;">
+                <span class="check-text" style="color: var(--warning);" id="lbl-just-text">✅ Ya justifiqué en Odoo</span>
+                <div class="switch">
+                    <input type="checkbox" id="in-justificado" onchange="toggleJustificacionUI(this)">
+                    <span class="slider"></span>
+                </div>
+            </label>
+            <input type="hidden" id="just-id">
+            <div class="btn-split" style="margin-top: 20px;">
+                <button class="b-can" onclick="cerrarModal('modal-justificar')">Cancelar</button>
+                <button class="b-sav" onclick="guardarJustificacion()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="modal-perfil" class="modal-overlay" onclick="if(event.target === this) cerrarModal('modal-perfil')">
         <div class="modal-card">
-            <div class="m-title">Configuración</div>
-            
-            <div style="text-align: center; margin-bottom: 25px;">
+            <div class="m-title" style="margin-bottom: 15px;">Configuración</div>
+            <div style="text-align: center; margin-bottom: 15px;">
                 <div class="avatar-lg" id="edit-avatar-prev">J</div>
                 <label class="btn-upload-foto">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                     Cambiar Foto
                     <input type="file" accept="image/*" style="display:none;" onchange="cargarFoto(event)">
                 </label>
             </div>
-            
-            <div style="margin-bottom: 30px;">
+            <div style="margin-bottom: 15px;">
                 <span class="tf-label">Nombre de Usuario</span>
                 <input type="text" id="edit-name" placeholder="Ej. Joel" style="margin-bottom:0;">
             </div>
-
-            <label class="check-row" id="cr-dark" style="margin-bottom: 20px;">
+            <label class="check-row" id="cr-dark" style="margin-bottom: 15px;">
                 <span class="check-text">🌙 Modo Oscuro</span>
                 <div class="switch"><input type="checkbox" id="t-dark" onchange="alternarModoOscuro()"><span class="slider"></span></div>
             </label>
-
-            <div style="margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px;">
+            <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
                 <span class="tf-label" style="color: var(--primary);">🛡️ Respaldo en la Nube / Copia de Seguridad</span>
                 <div class="btn-split" style="margin-top: 10px;">
-                    <button class="b-can" onclick="generarCodigoSync()" style="font-size: 12px; padding: 12px;">Copia Manual (Texto)</button>
-                    <button class="b-can" onclick="cargarCodigoSync()" style="font-size: 12px; padding: 12px; color: var(--primary); border-color: var(--primary);">Restaurar</button>
+                    <button class="b-can" onclick="generarCodigoSync()" style="font-size: 11px; padding: 10px;">Copia Manual (Texto)</button>
+                    <button class="b-can" onclick="abrirModalSync()" style="font-size: 11px; padding: 10px; color: var(--primary); border-color: var(--primary);">Restaurar</button>
                 </div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; line-height: 1.4;">Tus turnos se guardan en tu celular y se envían a tu Excel en Google Drive automáticamente.</p>
             </div>
-
-            <div class="btn-split" style="margin-top: 30px;">
+            <div class="btn-split" style="margin-top: 20px;">
                 <button class="b-can" onclick="cerrarModal('modal-perfil')">Cerrar</button>
-                <button class="b-sav" onclick="guardarPerfil()">Aplicar Cambios</button>
+                <button class="b-sav" onclick="guardarPerfil()">Aplicar</button>
             </div>
         </div>
     </div>
 
     <script>
         const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzyW__j3YSl5skDVfcMKopLKoUDkRBYIs8G79ng85fYhs616KJKb8mVLdHxkwtIrXzS/exec";
+        const PIN_ACCESO = "2026"; 
 
         let db = { turnos: [] };
         let profile = { nombre: "Joel", img: "" }; 
@@ -369,28 +404,34 @@
         document.addEventListener("DOMContentLoaded", () => {
             const saveDB = localStorage.getItem('tohka_sch_v3');
             if(saveDB) db = JSON.parse(saveDB);
-            
             const saveProf = localStorage.getItem('tohka_sch_prof');
             if(saveProf) profile = JSON.parse(saveProf);
-            
             if(localStorage.getItem('tohka_theme') === 'dark') {
                 document.body.classList.add('dark-mode');
                 document.getElementById('t-dark').checked = true;
             }
-            
             construirChipsHora();
             actualizarHeader();
             renderUI();
             setInterval(renderUI, 60000); 
         });
 
+        function verificarPin() {
+            const inputVal = document.getElementById('login-pin').value;
+            if(inputVal === PIN_ACCESO) {
+                document.getElementById('pantalla-login').style.opacity = "0";
+                setTimeout(() => { document.getElementById('pantalla-login').style.display = "none"; }, 300);
+            } else {
+                const err = document.getElementById('login-err');
+                err.style.display = "block";
+                document.querySelector('.login-box').classList.add('shake');
+                setTimeout(() => document.querySelector('.login-box').classList.remove('shake'), 300);
+            }
+        }
+        document.getElementById('login-pin').addEventListener('keypress', function (e) { if (e.key === 'Enter') verificarPin(); });
+
         function syncToGoogleDrive(turno) {
-            fetch(GOOGLE_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(turno)
-            }).catch(err => console.log("Drive Sync Pendiente"));
+            fetch(GOOGLE_APP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(turno) }).catch(e => {});
         }
 
         function construirChipsHora() {
@@ -405,42 +446,27 @@
         }
 
         function setHour(tipo, h) {
-            if(tipo === 'in') { 
-                stateTime.inH = h; 
-                if(h === 18) stateTime.inM = '00'; 
-            } else { 
-                stateTime.outH = h; 
-                if(h === 18) stateTime.outM = '00'; 
-            }
+            if(tipo === 'in') { stateTime.inH = h; if(h === 18) stateTime.inM = '00'; } 
+            else { stateTime.outH = h; if(h === 18) stateTime.outM = '00'; }
             pintarChips(); evaluarReglasAutomaticas();
             const chip = document.getElementById(`chip-${tipo}-${h}`);
             if(chip) chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
         function setMins(tipo, m) {
-            if(tipo === 'in') { 
-                if(stateTime.inH === 18 && m === '30') return; 
-                stateTime.inM = m; 
-            } else { 
-                if(stateTime.outH === 18 && m === '30') return; 
-                stateTime.outM = m; 
-            }
+            if(tipo === 'in') { if(stateTime.inH === 18 && m === '30') return; stateTime.inM = m; } 
+            else { if(stateTime.outH === 18 && m === '30') return; stateTime.outM = m; }
             pintarChips(); evaluarReglasAutomaticas();
         }
 
         function pintarChips() {
             document.querySelectorAll('.t-chip').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.t-min-btn').forEach(b => { b.classList.remove('active'); b.classList.remove('disabled'); });
-            
             const cin = document.getElementById(`chip-in-${stateTime.inH}`); if(cin) cin.classList.add('active');
             const cout = document.getElementById(`chip-out-${stateTime.outH}`); if(cout) cout.classList.add('active');
-            
-            const in30 = document.getElementById('btn-in-30');
-            if(stateTime.inH === 18) { in30.classList.add('disabled'); stateTime.inM = '00'; }
+            const in30 = document.getElementById('btn-in-30'); if(stateTime.inH === 18) { in30.classList.add('disabled'); stateTime.inM = '00'; }
             document.getElementById(`btn-in-${stateTime.inM}`).classList.add('active');
-            
-            const out30 = document.getElementById('btn-out-30');
-            if(stateTime.outH === 18) { out30.classList.add('disabled'); stateTime.outM = '00'; }
+            const out30 = document.getElementById('btn-out-30'); if(stateTime.outH === 18) { out30.classList.add('disabled'); stateTime.outM = '00'; }
             document.getElementById(`btn-out-${stateTime.outM}`).classList.add('active');
         }
 
@@ -460,19 +486,22 @@
 
         function generarCodigoSync() {
             const txt = btoa(encodeURIComponent(JSON.stringify(db)));
-            navigator.clipboard.writeText(txt).then(() => {
-                mostrarAlerta("¡Código Copiado!", "Código de seguridad copiado a tu portapapeles. Pégalo en WhatsApp o Notas.");
-            });
+            navigator.clipboard.writeText(txt).then(() => mostrarAlerta("¡Código Copiado!", "Código de seguridad copiado a tu portapapeles. Pégalo en WhatsApp o Notas."));
         }
 
-        function cargarCodigoSync() {
-            const code = prompt("Pega aquí tu código de sincronización:");
-            if(!code) return;
+        function abrirModalSync() {
+            document.getElementById('sync-input').value = "";
+            document.getElementById('sync-modal').style.display = 'flex';
+        }
+
+        function ejecutarRestauracion() {
+            const code = document.getElementById('sync-input').value.trim();
+            if(!code) { mostrarAlerta("Atención", "El campo está vacío."); return; }
             try {
                 const newDb = JSON.parse(decodeURIComponent(atob(code)));
-                if(newDb.turnos) { db = newDb; guardarData(); mostrarAlerta("¡Restaurado!", "Tu historial ha sido recuperado."); } 
+                if(newDb.turnos) { db = newDb; guardarData(); cerrarModal('sync-modal'); cerrarModal('modal-perfil'); mostrarAlerta("¡Restaurado!", "Tu historial ha sido recuperado con éxito."); } 
                 else throw new Error();
-            } catch(e) { mostrarAlerta("Error", "Código no válido."); }
+            } catch(e) { mostrarAlerta("Error", "El código ingresado no es válido."); }
         }
 
         function guardarData() { localStorage.setItem('tohka_sch_v3', JSON.stringify(db)); renderUI(); }
@@ -593,7 +622,9 @@
             const f = document.getElementById('in-fecha').value; if(!f) { mostrarAlerta("Aviso", "Selecciona fecha."); return; }
             const trab = document.getElementById('in-trabajado').checked; const feri = document.getElementById('in-feriado').checked;
             const not = document.getElementById('in-notas').value.trim();
-            let reg = { id: Date.now(), fecha: f, trabajado: trab, esFeriado: feri, notas: not, hrs: 0 };
+            let alertOdoo = false;
+
+            let reg = { id: Date.now(), fecha: f, trabajado: trab, esFeriado: feri, notas: not, hrs: 0, reqJustificacion: false, justificado: false };
 
             if(trab) {
                 const s = `${stateTime.inH.toString().padStart(2,'0')}:${stateTime.inM}`;
@@ -602,6 +633,12 @@
                 let h = (stateTime.outH + (stateTime.outM==='30'?0.5:0)) - (stateTime.inH + (stateTime.inM==='30'?0.5:0));
                 if(h < 0) h += 24;
                 reg.start = s; reg.end = e; reg.break = hBreak; reg.hrs = Math.max(0, h - (hBreak ? 1 : 0));
+                
+                const esSabado = new Date(f.split('-')[0], f.split('-')[1]-1, f.split('-')[2]).getDay() === 6;
+                if(!esSabado && !feri) {
+                    if(stateTime.inH > 8 || (stateTime.inH === 8 && stateTime.inM === '30') || stateTime.outH < 14) alertOdoo = true;
+                }
+                reg.reqJustificacion = alertOdoo;
             }
 
             const idx = db.turnos.findIndex(x => x.fecha === f);
@@ -609,11 +646,38 @@
             db.turnos.sort((a,b) => a.fecha.localeCompare(b.fecha));
             
             syncToGoogleDrive(reg);
-
             guardarData(); cerrarModal('modal-form');
         }
 
         function eliminarTurno(id) { solicitarConfirmacion("¿Deseas borrar este registro para siempre?", () => { db.turnos = db.turnos.filter(x => x.id !== id); guardarData(); }); }
+
+        function toggleJustificacionUI(checkbox) {
+            const cr = document.getElementById('cr-justificado');
+            const lbl = document.getElementById('lbl-just-text');
+            if(checkbox.checked) {
+                cr.style.background = 'rgba(46, 204, 113, 0.1)'; cr.style.borderColor = 'var(--accent)'; lbl.style.color = 'var(--accent)';
+            } else {
+                cr.style.background = 'rgba(243, 156, 18, 0.05)'; cr.style.borderColor = 'var(--warning)'; lbl.style.color = 'var(--warning)';
+            }
+        }
+
+        function abrirModalJustificar(id) {
+            const t = db.turnos.find(x => x.id === id);
+            if(!t) return;
+            document.getElementById('just-id').value = id;
+            document.getElementById('just-desc').innerText = `Día: ${t.fecha}\nHorario: ${t.start} - ${t.end}\nMotivo: ${t.notas}`;
+            document.getElementById('in-justificado').checked = t.justificado || false;
+            toggleJustificacionUI(document.getElementById('in-justificado'));
+            document.getElementById('modal-justificar').style.display = 'flex';
+        }
+
+        function guardarJustificacion() {
+            const id = parseInt(document.getElementById('just-id').value);
+            const status = document.getElementById('in-justificado').checked;
+            const idx = db.turnos.findIndex(x => x.id === id);
+            if(idx >= 0) { db.turnos[idx].justificado = status; guardarData(); }
+            cerrarModal('modal-justificar');
+        }
 
         function renderUI() { renderDashboard(); renderHistorial(); }
 
@@ -630,36 +694,41 @@
             else { card.classList.remove('goal-met'); bar.style.width = `${(hMes/160)*100}%`; }
 
             const cont = document.getElementById('lista-turnos');
-            const futuros = db.turnos.filter(t => t.fecha >= hoyStr);
+            const dashboardShifts = db.turnos.filter(t => {
+                if(t.notas && t.notas.includes('Odoo') && t.reqJustificacion === undefined) { t.reqJustificacion = true; t.justificado = false; }
+                return t.fecha >= hoyStr || (t.reqJustificacion && !t.justificado);
+            });
             
-            if(futuros.length === 0) {
-                cont.innerHTML = `<div class="empty-state"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><br>No tienes turnos agendados.</div>`;
+            if(dashboardShifts.length === 0) {
+                cont.innerHTML = `<div class="empty-state"><svg style="width: 64px; height: 64px; opacity: 0.2; margin-bottom: 15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><br>No tienes turnos agendados.</div>`;
                 return;
             }
 
             let html = "";
-            futuros.forEach(t => {
+            dashboardShifts.forEach(t => {
                 const [ty, tm, td] = t.fecha.split('-'); const dObj = new Date(ty, tm-1, td);
                 const esHoy = t.fecha === hoyStr;
                 
-                let b = []; let liveBadge = "";
+                let b = []; let liveBadge = ""; let btnAccion = "";
                 if(t.esFeriado) b.push(`<span class="tag feriado">Feriado</span>`);
                 if(t.trabajado && t.break) b.push(`<span class="tag">Break -1h</span>`);
-                if(t.notas.includes("Odoo")) b.push(`<span class="tag alert">Alerta Odoo</span>`);
+                if(t.reqJustificacion) b.push(`<span class="tag alert">Alerta Odoo</span>`);
 
-                if(esHoy && t.trabajado) {
+                if (t.reqJustificacion && !t.justificado && t.fecha < hoyStr) {
+                    liveBadge = `<div class="live-badge" style="color:var(--warning);"><span class="live-dot" style="background:var(--warning); animation: pulseOrange 1.5s infinite;"></span> POR JUSTIFICAR</div>`;
+                    btnAccion = `<button class="btn-resolve" onclick="abrirModalJustificar(${t.id})">Resolver Alerta</button>`;
+                } else if(esHoy && t.trabajado) {
                     const n = new Date(); const nMin = n.getHours() * 60 + n.getMinutes();
                     const [sh, sm] = t.start.split(':').map(Number); const sMin = sh*60 + sm;
                     const [eh, em] = t.end.split(':').map(Number); let eMin = eh*60 + em; if(eMin<sMin) eMin+=24*60;
-                    
                     if(nMin >= sMin && nMin <= eMin) liveBadge = `<div class="live-badge"><span class="live-dot"></span> EN TURNO</div>`;
                     else if(nMin > eMin) liveBadge = `<div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-top:5px;">🏁 FINALIZADO</div>`;
                     else liveBadge = `<div style="font-size:11px; font-weight:800; color:var(--gold); margin-top:5px;">⏳ PRÓXIMO</div>`;
                 }
 
                 let mid = t.trabajado 
-                    ? `<div class="s-time">${t.start} - ${t.end}</div><div class="s-tags">${b.join('')}</div>${liveBadge}${t.notas?`<div class="s-note">${t.notas}</div>`:''}`
-                    : `<div class="s-time" style="color:var(--text-muted);">Día Libre</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">${t.notas}</div>`:''}`;
+                    ? `<div class="s-time">${t.start} - ${t.end}</div><div class="s-tags">${b.join('')}</div>${liveBadge}${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}${btnAccion}`
+                    : `<div class="s-time" style="color:var(--text-muted);">Día Libre</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`;
 
                 html += `<div class="shift-card fade-in ${esHoy?'today':''}"><div class="s-date"><div class="s-day">${esHoy?'HOY':DIAS_SHORT[dObj.getDay()]}</div><div class="s-num">${td}</div></div><div class="s-info">${mid}</div><div class="s-right"><button class="btn-del" onclick="eliminarTurno(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>${t.trabajado ? `<div class="s-hrs">${t.hrs}h</div>` : ''}</div></div>`;
             });
@@ -668,7 +737,7 @@
 
         function renderHistorial() {
             const cont = document.getElementById('lista-historial');
-            if(db.turnos.length === 0) { cont.innerHTML = "<div class='empty-state'>Historial vacío.</div>"; return; }
+            if(db.turnos.length === 0) { cont.innerHTML = `<div class="empty-state"><svg style="width: 64px; height: 64px; opacity: 0.2; margin-bottom: 15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><br>Historial vacío.</div>`; return; }
 
             let grupos = {}; db.turnos.forEach(t => { const k = t.fecha.substring(0, 7); if(!grupos[k]) grupos[k] = []; grupos[k].push(t); });
 
@@ -685,7 +754,7 @@
                     filas += `<div class="row-day"><div class="r-date">${td} ${DIAS_SHORT[dObj.getDay()]}</div><div class="r-det">${info}</div><div class="r-hrs">${t.hrs>0?t.hrs+'h':'-'}</div></div>`;
                 });
 
-                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div style="display:flex;"><button class="btn-copy" style="flex:1;" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Texto</button><button class="btn-excel" style="flex:1; margin-left:0;" onclick="exportarExcelOficial()"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Excel</button></div></div></div>`;
+                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div style="display:flex;"><button class="btn-copy" style="flex:1;" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copiar Texto</button></div></div></div>`;
             });
             cont.innerHTML = html;
         }
@@ -701,10 +770,6 @@
             txt += `\n*TOTAL MENSUAL: ${th} HORAS*`;
             if(th > 160) txt += `\n*HORAS ADICIONALES: +${th - 160} HORAS*`;
             navigator.clipboard.writeText(txt).then(() => mostrarAlerta("¡Éxito!", "Copiado al portapapeles."));
-        }
-
-        function exportarExcelOficial() {
-             mostrarAlerta("Bóveda Excel", "Tus registros se están enviando y guardando automáticamente en tu archivo de Google Drive 'TS-CT'. ¡Abre Google Sheets para ver tu reporte oficial!");
         }
     </script>
 </body>
