@@ -29,7 +29,7 @@
             --bg-surface: #1a1a24;
             --bg-float: rgba(26, 26, 36, 0.85);
             --text-main: #f0f0f5;
-            --text-muted: #7a7a8c;
+            --text-muted: #a0a0b0; 
             --primary: #a55eea; 
             --primary-glow: rgba(165, 94, 234, 0.3);
             --primary-light: rgba(165, 94, 234, 0.15);
@@ -53,7 +53,6 @@
         .logo-icon { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), #5a2e6e); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: 0 4px 10px var(--primary-glow); }
         .logo-text h1 { font-size: 1.2em; line-height: 1; color: var(--text-main); }
         .logo-text span { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; }
-
         .profile-pill { display: flex; align-items: center; gap: 10px; background: var(--bg-surface); padding: 5px 15px 5px 5px; border-radius: 30px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); cursor: pointer; transition: transform 0.2s; }
         .profile-pill:active { transform: scale(0.95); }
         .p-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; overflow: hidden; }
@@ -63,19 +62,16 @@
         .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
         .fade-in { animation: smoothFade 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes smoothFade { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
-
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: smoothFade 0.2s ease-out forwards; }
 
         .hero-card { background: var(--bg-surface); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow-sm); margin-bottom: 25px; border: 1px solid var(--border); position: relative; overflow: hidden; }
         .hero-card::before { content: ''; position: absolute; left: 0; top: 0; width: 6px; height: 100%; background: var(--primary); }
         .hero-card.goal-met::before { background: var(--gold); }
-        
         .hc-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
         .hc-lbl { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         .hc-val { font-size: 32px; font-weight: 800; color: var(--text-main); line-height: 1; }
         .hc-val span { font-size: 16px; color: var(--text-muted); }
-        
         .bar-bg { width: 100%; height: 12px; background: var(--bg-body); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
         .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #b33771); border-radius: 6px; transition: width 0.8s ease; }
         .goal-met .bar-fill { background: linear-gradient(90deg, #f1c40f, #e67e22); }
@@ -85,25 +81,24 @@
         .section-title { font-size: 16px; font-weight: 700; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
         .shift-card { background: var(--bg-surface); border-radius: var(--radius); padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); align-items: center; }
         .shift-card.today { border-color: var(--primary); background: var(--primary-light); }
-        
         .s-date { background: var(--bg-body); border-radius: 14px; min-width: 60px; height: 65px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border); }
         .s-day { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; }
         .s-num { font-size: 22px; font-weight: 800; color: var(--text-main); line-height: 1.1; }
-        
-        .s-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .s-info { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
         .s-time { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;}
         .s-tags { display: flex; gap: 5px; flex-wrap: wrap; }
-        .tag { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 8px; background: var(--border); color: var(--text-muted); text-transform: uppercase; }
+        .tag { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 8px; background: var(--border); color: var(--text-muted); text-transform: uppercase; white-space: nowrap; }
         .tag.alert { background: rgba(255, 71, 87, 0.1); color: var(--danger); border: 1px solid rgba(255, 71, 87, 0.2);}
         .tag.feriado { background: rgba(245, 166, 35, 0.1); color: var(--gold); border: 1px solid rgba(245, 166, 35, 0.2);}
-        .s-note { font-size: 12px; color: var(--text-muted); margin-top: 5px; font-weight: 500; }
+        .s-note { font-size: 12px; color: var(--text-muted); margin-top: 5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-style: italic;}
         
-        .s-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 65px; }
+        .s-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; height: 65px; gap: 5px; }
         .s-hrs { font-size: 14px; font-weight: 800; color: var(--accent); background: rgba(46, 204, 113, 0.1); padding: 4px 8px; border-radius: 8px; }
-        .btn-del { background: transparent; border: none; color: var(--text-muted); padding: 5px; cursor: pointer; border-radius: 50%; transition: 0.2s;}
+        .btn-icon-action { background: transparent; border: none; padding: 6px; cursor: pointer; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
+        .btn-del { color: var(--text-muted); }
         .btn-del:active { background: rgba(255, 71, 87, 0.1); color: var(--danger); }
-        .btn-resolve { background: rgba(243, 156, 18, 0.1); color: var(--warning); border: 1px solid rgba(243, 156, 18, 0.3); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: 0.2s; align-self: flex-start; }
-        .btn-resolve:active { transform: scale(0.95); background: var(--warning); color: white; }
+        .btn-resolve-icon { background: rgba(243, 156, 18, 0.15); color: var(--warning); animation: pulseOrange 2s infinite; }
+        .btn-resolve-icon:active { transform: scale(0.9); background: var(--warning); color: white; }
 
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
         @keyframes pulseOrange { 0% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0); } 100% { box-shadow: 0 0 0 0 rgba(243, 156, 18, 0); } }
@@ -118,17 +113,19 @@
         .acc-item.open .acc-icon { transform: rotate(180deg); }
         .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: var(--bg-body); }
         .acc-item.open .acc-body { max-height: 1500px; }
+        .acc-actions { display:flex; padding: 15px 20px 20px 20px; gap: 10px; } 
         
         .row-day { display: flex; justify-content: space-between; padding: 12px 20px; border-top: 1px solid var(--border); font-size: 13px; align-items: center; }
         .r-date { font-weight: 700; color: var(--primary); width: 80px; }
         .r-det { flex: 1; color: var(--text-muted); font-weight: 500; }
         .r-hrs { font-weight: 800; color: var(--text-main); width: 40px; text-align: right; }
         
-        .btn-excel { width: calc(100% - 40px); margin: 15px 20px; background: #107c41; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(16, 124, 65, 0.3);}
-        .btn-excel:active { transform: scale(0.97); }
+        .btn-copy { flex:1; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; transition: transform 0.2s; box-shadow: var(--shadow-sm); }
+        .btn-copy:active { transform: scale(0.97); background: var(--border); }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-card { background: var(--bg-surface); width: 90%; max-width: 450px; padding: 25px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 90vh; overflow-y: auto; }
+        .modal-card { background: var(--bg-surface); width: 90%; max-width: 450px; padding: 25px; border-radius: 24px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); max-height: 90vh; overflow-y: auto; scrollbar-width: none; }
+        .modal-card::-webkit-scrollbar { display: none; }
         @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         @media (max-width: 600px) {
@@ -136,19 +133,15 @@
             .modal-card { width: 100%; max-width: 100%; border-radius: 30px 30px 0 0; animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); padding-bottom: 40px; max-height: 90vh;}
             @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         }
-        
         .m-title { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 20px; text-align: center; }
 
         .touch-flow-group { margin-bottom: 20px; }
         .tf-label { display: block; font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
-        
         .tf-row { display: flex; align-items: center; gap: 10px; background: var(--bg-body); padding: 8px; border-radius: 16px; border: 1px solid var(--border); }
-        .tf-scroll { flex: 1; display: flex; gap: 6px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 2px; }
+        .tf-scroll { flex: 1; display: flex; gap: 6px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 2px; scrollbar-width: none; }
         .tf-scroll::-webkit-scrollbar { display: none; }
-        
         .t-chip { padding: 8px 14px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; font-size: 16px; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: 0.2s; user-select: none; flex-shrink: 0; }
         .t-chip.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px var(--primary-glow); transform: scale(1.05); }
-        
         .t-min-toggle { display: flex; flex-direction: column; gap: 4px; background: var(--bg-surface); padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
         .t-min-btn { padding: 4px 10px; font-size: 12px; font-weight: 800; border-radius: 6px; color: var(--text-muted); cursor: pointer; transition: 0.2s; text-align: center;}
         .t-min-btn.active { background: var(--text-main); color: var(--bg-surface); }
@@ -157,7 +150,6 @@
         .check-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--bg-body); border: 1px solid var(--border); border-radius: 14px; transition: 0.2s; cursor: pointer; }
         .check-row.active { border-color: var(--primary); background: var(--primary-light); }
         .check-text { font-size: 14px; font-weight: 700; color: var(--text-main); }
-        
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--text-muted); border-radius: 30px; transition: .3s; }
@@ -182,13 +174,15 @@
         .bottom-dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg-float); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 30px; display: flex; padding: 8px 15px; gap: 5px; box-shadow: var(--shadow-lg); z-index: 100; }
         .dock-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 20px; color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .dock-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
-        
         .fab { position: fixed; bottom: 90px; right: 25px; width: 60px; height: 60px; border-radius: 30px; background: var(--text-main); color: var(--bg-surface); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); z-index: 90; cursor: pointer; transition: transform 0.2s; }
         .fab:active { transform: scale(0.9); }
 
-        .avatar-lg { width: 70px; height: 70px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; overflow: hidden; border: 3px solid var(--bg-body); margin: 0 auto;}
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); font-weight: 500; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        .empty-icon { width: 80px; height: 80px; opacity: 0.15; margin-bottom: 20px; color: var(--text-main); }
+
+        .avatar-lg { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; overflow: hidden; border: 3px solid var(--bg-body); margin: 0 auto;}
         .avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
-        .btn-upload-foto { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; transition: 0.2s; }
+        .btn-upload-foto { background: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; margin-top: 15px; transition: 0.2s; }
         .btn-upload-foto:active { transform: scale(0.95); }
         
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
@@ -211,7 +205,7 @@
     <div id="custom-alert-modal" class="modal-overlay" style="z-index: 3000;">
         <div class="modal-card" style="max-width: 350px; text-align: center;">
             <h3 id="alert-title" style="color: var(--primary); margin-bottom: 10px;"></h3>
-            <p id="alert-message" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto;"></p>
+            <p id="alert-message" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; max-height: 150px; overflow-y: auto; scrollbar-width: none;"></p>
             <button class="b-sav" onclick="cerrarModal('custom-alert-modal')" style="width: 100%;">Aceptar</button>
         </div>
     </div>
@@ -230,8 +224,8 @@
     <div id="sync-modal" class="modal-overlay" style="z-index: 3002;">
         <div class="modal-card" style="max-width: 380px; text-align: center;">
             <h3 style="color: var(--text-main); margin-bottom: 10px;">Restaurar Datos</h3>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Pega aquí el código que copiaste anteriormente para recuperar tu historial.</p>
-            <textarea id="sync-input" style="width: 100%; height: 120px; padding: 15px; border-radius: 14px; border: 2px dashed var(--border); background: var(--bg-body); color: var(--text-main); font-family: monospace; font-size: 12px; outline: none; margin-bottom: 15px; resize: none;"></textarea>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Pega aquí el código de respaldo para recuperar tu historial en este dispositivo.</p>
+            <textarea id="sync-input" style="width: 100%; height: 120px; padding: 15px; border-radius: 14px; border: 2px dashed var(--border); background: var(--bg-body); color: var(--text-main); font-family: monospace; font-size: 12px; outline: none; margin-bottom: 15px; resize: none; scrollbar-width: none;"></textarea>
             <div class="btn-split" style="margin-top: 0;">
                 <button onclick="cerrarModal('sync-modal')" class="b-can">Cancelar</button>
                 <button onclick="ejecutarRestauracion()" class="b-sav">Restaurar</button>
@@ -360,7 +354,7 @@
     <div id="modal-perfil" class="modal-overlay" onclick="if(event.target === this) cerrarModal('modal-perfil')">
         <div class="modal-card">
             <div class="m-title" style="margin-bottom: 15px;">Configuración</div>
-            <div style="text-align: center; margin-bottom: 15px;">
+            <div style="text-align: center; margin-bottom: 20px;">
                 <div class="avatar-lg" id="edit-avatar-prev">J</div>
                 <label class="btn-upload-foto">
                     <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
@@ -368,22 +362,23 @@
                     <input type="file" accept="image/*" style="display:none;" onchange="cargarFoto(event)">
                 </label>
             </div>
-            <div style="margin-bottom: 15px;">
+            <div style="margin-bottom: 20px;">
                 <span class="tf-label">Nombre de Usuario</span>
                 <input type="text" id="edit-name" placeholder="Ej. Joel" style="margin-bottom:0;">
             </div>
-            <label class="check-row" id="cr-dark" style="margin-bottom: 15px;">
+            <label class="check-row" id="cr-dark" style="margin-bottom: 20px;">
                 <span class="check-text">🌙 Modo Oscuro</span>
                 <div class="switch"><input type="checkbox" id="t-dark" onchange="alternarModoOscuro()"><span class="slider"></span></div>
             </label>
-            <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
-                <span class="tf-label" style="color: var(--primary);">🛡️ Respaldo en la Nube / Copia de Seguridad</span>
+            <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <span class="tf-label" style="color: var(--primary); margin-bottom: 5px;">🛡️ Gestión de Datos y Restauración</span>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">Tus turnos se guardan automáticamente en Google Drive. Usa estas opciones solo si necesitas mover tus datos de un celular a otro manualmente.</p>
                 <div class="btn-split" style="margin-top: 10px;">
-                    <button class="b-can" onclick="generarCodigoSync()" style="font-size: 11px; padding: 10px;">Copia Manual (Texto)</button>
-                    <button class="b-can" onclick="abrirModalSync()" style="font-size: 11px; padding: 10px; color: var(--primary); border-color: var(--primary);">Restaurar</button>
+                    <button class="b-can" onclick="generarCodigoSync()" style="font-size: 11px; padding: 12px;">Copiar Código de Respaldo</button>
+                    <button class="b-can" onclick="abrirModalSync()" style="font-size: 11px; padding: 12px; color: var(--primary); border-color: var(--primary);">Restaurar con Código</button>
                 </div>
             </div>
-            <div class="btn-split" style="margin-top: 20px;">
+            <div class="btn-split" style="margin-top: 25px;">
                 <button class="b-can" onclick="cerrarModal('modal-perfil')">Cerrar</button>
                 <button class="b-sav" onclick="guardarPerfil()">Aplicar</button>
             </div>
@@ -391,11 +386,11 @@
     </div>
 
     <script>
-        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzyW__j3YSl5skDVfcMKopLKoUDkRBYIs8G79ng85fYhs616KJKb8mVLdHxkwtIrXzS/exec";
-        const PIN_ACCESO = "2026"; 
+        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbyKGmAY65f5oy-9OHD8zjtBXMyqiv_NhYPWTyC7SS6xMhtWmTirOEy5tzRYOr4EZPiw/exec";
+        const PIN_ACCESO = "4425"; 
 
         let db = { turnos: [] };
-        let profile = { nombre: "Joel", img: "" }; 
+        let profile = { nombre: "Tohka", img: "" }; 
         let stateTime = { inH: 8, inM: "00", outH: 14, outM: "00" };
 
         const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -430,8 +425,14 @@
         }
         document.getElementById('login-pin').addEventListener('keypress', function (e) { if (e.key === 'Enter') verificarPin(); });
 
-        function syncToGoogleDrive(turno) {
-            fetch(GOOGLE_APP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(turno) }).catch(e => {});
+        function syncToGoogleDrive(turno, action = "add") {
+            const payload = { ...turno, action: action };
+            fetch(GOOGLE_APP_URL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'text/plain' }, 
+                body: JSON.stringify(payload) 
+            }).catch(e => {});
         }
 
         function construirChipsHora() {
@@ -645,11 +646,17 @@
             if(idx >= 0) db.turnos[idx] = reg; else db.turnos.push(reg);
             db.turnos.sort((a,b) => a.fecha.localeCompare(b.fecha));
             
-            syncToGoogleDrive(reg);
+            syncToGoogleDrive(reg, "add");
             guardarData(); cerrarModal('modal-form');
         }
 
-        function eliminarTurno(id) { solicitarConfirmacion("¿Deseas borrar este registro para siempre?", () => { db.turnos = db.turnos.filter(x => x.id !== id); guardarData(); }); }
+        function eliminarTurno(id) { 
+            solicitarConfirmacion("¿Deseas borrar este registro para siempre?", () => { 
+                syncToGoogleDrive({id: id}, "delete");
+                db.turnos = db.turnos.filter(x => x.id !== id); 
+                guardarData(); 
+            }); 
+        }
 
         function toggleJustificacionUI(checkbox) {
             const cr = document.getElementById('cr-justificado');
@@ -665,7 +672,7 @@
             const t = db.turnos.find(x => x.id === id);
             if(!t) return;
             document.getElementById('just-id').value = id;
-            document.getElementById('just-desc').innerText = `Día: ${t.fecha}\nHorario: ${t.start} - ${t.end}\nMotivo: ${t.notas}`;
+            document.getElementById('just-desc').innerText = `Día: ${t.fecha}\nHorario: ${t.start} - ${t.end}\nMotivo: "${t.notas}"`;
             document.getElementById('in-justificado').checked = t.justificado || false;
             toggleJustificacionUI(document.getElementById('in-justificado'));
             document.getElementById('modal-justificar').style.display = 'flex';
@@ -700,7 +707,7 @@
             });
             
             if(dashboardShifts.length === 0) {
-                cont.innerHTML = `<div class="empty-state"><svg style="width: 64px; height: 64px; opacity: 0.2; margin-bottom: 15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><br>No tienes turnos agendados.</div>`;
+                cont.innerHTML = `<div class="empty-state"><svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><br>No tienes turnos agendados.</div>`;
                 return;
             }
 
@@ -716,7 +723,7 @@
 
                 if (t.reqJustificacion && !t.justificado && t.fecha < hoyStr) {
                     liveBadge = `<div class="live-badge" style="color:var(--warning);"><span class="live-dot" style="background:var(--warning); animation: pulseOrange 1.5s infinite;"></span> POR JUSTIFICAR</div>`;
-                    btnAccion = `<button class="btn-resolve" onclick="abrirModalJustificar(${t.id})">Resolver Alerta</button>`;
+                    btnAccion = `<button class="btn-icon-action btn-resolve-icon" onclick="abrirModalJustificar(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg></button>`;
                 } else if(esHoy && t.trabajado) {
                     const n = new Date(); const nMin = n.getHours() * 60 + n.getMinutes();
                     const [sh, sm] = t.start.split(':').map(Number); const sMin = sh*60 + sm;
@@ -727,17 +734,17 @@
                 }
 
                 let mid = t.trabajado 
-                    ? `<div class="s-time">${t.start} - ${t.end}</div><div class="s-tags">${b.join('')}</div>${liveBadge}${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}${btnAccion}`
+                    ? `<div class="s-time">${t.start} - ${t.end}</div><div class="s-tags">${b.join('')}</div>${liveBadge}${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`
                     : `<div class="s-time" style="color:var(--text-muted);">Día Libre</div><div class="s-tags">${b.join('')}</div>${t.notas?`<div class="s-note">"${t.notas}"</div>`:''}`;
 
-                html += `<div class="shift-card fade-in ${esHoy?'today':''}"><div class="s-date"><div class="s-day">${esHoy?'HOY':DIAS_SHORT[dObj.getDay()]}</div><div class="s-num">${td}</div></div><div class="s-info">${mid}</div><div class="s-right"><button class="btn-del" onclick="eliminarTurno(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>${t.trabajado ? `<div class="s-hrs">${t.hrs}h</div>` : ''}</div></div>`;
+                html += `<div class="shift-card fade-in ${esHoy?'today':''}"><div class="s-date"><div class="s-day">${esHoy?'HOY':DIAS_SHORT[dObj.getDay()]}</div><div class="s-num">${td}</div></div><div class="s-info">${mid}</div><div class="s-right">${btnAccion}<button class="btn-icon-action btn-del" onclick="eliminarTurno(${t.id})"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>${t.trabajado ? `<div class="s-hrs">${t.hrs}h</div>` : ''}</div></div>`;
             });
             cont.innerHTML = html;
         }
 
         function renderHistorial() {
             const cont = document.getElementById('lista-historial');
-            if(db.turnos.length === 0) { cont.innerHTML = `<div class="empty-state"><svg style="width: 64px; height: 64px; opacity: 0.2; margin-bottom: 15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><br>Historial vacío.</div>`; return; }
+            if(db.turnos.length === 0) { cont.innerHTML = `<div class="empty-state"><svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><br>Historial vacío.</div>`; return; }
 
             let grupos = {}; db.turnos.forEach(t => { const k = t.fecha.substring(0, 7); if(!grupos[k]) grupos[k] = []; grupos[k].push(t); });
 
@@ -754,7 +761,7 @@
                     filas += `<div class="row-day"><div class="r-date">${td} ${DIAS_SHORT[dObj.getDay()]}</div><div class="r-det">${info}</div><div class="r-hrs">${t.hrs>0?t.hrs+'h':'-'}</div></div>`;
                 });
 
-                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div style="display:flex;"><button class="btn-copy" style="flex:1;" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copiar Texto</button></div></div></div>`;
+                html += `<div class="acc-item fade-in"><div class="acc-head" onclick="this.parentElement.classList.toggle('open')"><div><div class="acc-t">${nMes} ${y}</div><div class="acc-s">${thrs} hrs laboradas | ${diasT} días</div></div><svg class="acc-icon" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></div><div class="acc-body">${filas}<div class="acc-actions"><button class="btn-copy" onclick="copiarRRHH('${k}', '${nMes}', '${y}')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2-2v8a2 2 0 002 2z" /></svg> Copiar Texto</button></div></div></div>`;
             });
             cont.innerHTML = html;
         }
